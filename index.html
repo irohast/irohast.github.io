@@ -3,49 +3,76 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>별과바다 부족 펫 계산기</title>
 
 <style>
+
+/* 배경 (파스텔 블루) */
 body{
-    background:linear-gradient(180deg,#0c1b3a,#1e3c72);
-    font-family: 'Segoe UI', sans-serif;
+    margin:0;
+    height:100vh;
+    background:linear-gradient(180deg,#dbeafe,#bfdbfe);
+    font-family:'Segoe UI',sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#1e293b;
+}
+
+/* 계산기 박스 */
+.container{
+    width:360px;
+    padding:30px;
+    border-radius:22px;
+    background:#2f4363;
+    box-shadow:0 18px 40px rgba(0,0,0,0.25);
     text-align:center;
     color:white;
 }
 
-.container{
-    width:420px;
-    margin:60px auto;
-    background:rgba(255,255,255,0.1);
-    padding:30px;
-    border-radius:20px;
-    backdrop-filter:blur(8px);
-    box-shadow:0 10px 30px rgba(0,0,0,0.5);
-}
-
+/* 제목 */
 h1{
-    margin-bottom:5px;
+    margin-top:0;
+    margin-bottom:8px;
 }
 
+/* 제작자 표시 */
 .creator{
-    font-size:13px;
-    opacity:0.8;
+    font-size:14px;
+    font-weight:700;
+    color:#b56576; /* 파스텔 버건디 */
     margin-bottom:20px;
 }
 
+/* 입력 영역 */
+.stat{
+    margin:10px 0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stat label{
+    width:60px;
+    text-align:left;
+}
+
+/* 입력칸 */
 input{
-    width:70px;
-    padding:10px;
-    margin:6px;
-    font-size:16px;
+    width:90px;
+    padding:8px;
     border-radius:10px;
     border:none;
     text-align:center;
+    font-size:15px;
 }
 
+/* 버튼 */
 button{
-    margin-top:18px;
-    padding:12px 24px;
+    margin-top:20px;
+    width:100%;
+    padding:12px;
     border:none;
     border-radius:14px;
     background:#4fc3ff;
@@ -56,14 +83,15 @@ button{
 }
 
 button:hover{
-    background:#82dbff;
+    background:#7dd3fc;
 }
 
-.result{
-    margin-top:22px;
-    font-size:20px;
-    font-weight:bold;
+/* 결과 영역 */
+#resultBox{
+    margin-top:20px;
+    font-size:16px;
 }
+
 </style>
 
 </head>
@@ -71,25 +99,45 @@ button:hover{
 <body>
 
 <div class="container">
-    <h1>⭐ 별과바다 부족 계산기 ⭐</h1>
-    <div class="creator">제작 : 이로하</div>
 
 ```
-<div>
-    HP <input id="hp" type="number"><br>
-    ATK <input id="atk" type="number"><br>
-    DEF <input id="def" type="number"><br>
-    AGI <input id="agi" type="number">
+<h1>⭐ 별과바다 부족 계산기 ⭐</h1>
+<div class="creator">제작 : 이로하</div>
+
+<div class="stat">
+    <label>HP</label>
+    <input id="hp" type="number">
 </div>
 
-<button onclick="calc()">S급 가능성 확인</button>
+<div class="stat">
+    <label>ATK</label>
+    <input id="atk" type="number">
+</div>
 
-<div class="result" id="result">스탯을 입력하세요</div>
+<div class="stat">
+    <label>DEF</label>
+    <input id="def" type="number">
+</div>
+
+<div class="stat">
+    <label>AGI</label>
+    <input id="agi" type="number">
+</div>
+
+<button id="calculate">결과 계산하기</button>
+
+<div id="resultBox">
+    스탯을 입력하고 계산을 눌러주세요
+</div>
 ```
 
 </div>
 
-<script src="calc.js"></script>
+<!-- 계산기 엔진 연결 -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="pet.js"></script>
 
 </body>
 </html>
