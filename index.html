@@ -1,125 +1,187 @@
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <title>⭐별과바다 부족 계산기⭐</title>
+
+<!-- 라이브러리 -->
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
 
 <style>
 body{
-margin:0;
-font-family:Pretendard, Arial;
 background:#eef5ff;
+font-family:Arial, Helvetica, sans-serif;
+margin:0;
 }
-header{
-background:linear-gradient(#7fbaff,#a9d2ff);
-text-align:center;
-padding:22px 10px 18px;
-color:white;
-}
-.creator{color:#b54b5c;font-weight:bold;}
-.container{
-display:flex;
-gap:22px;
-padding:24px;
-}
-.panel{
+
+.wrapper{
+max-width:1100px;
+margin:60px auto;
 background:white;
-border-radius:16px;
-padding:18px;
-width:33%;
-box-shadow:0 8px 20px rgba(0,0,0,0.08);
+padding:30px;
+border-radius:18px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
 }
+
+header{
+text-align:center;
+margin-bottom:25px;
+}
+header h1{
+font-size:22px;
+margin:0;
+}
+.creator{
+color:#b54b5c;
+font-weight:bold;
+margin-top:5px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+.panel{
+background:#f7fbff;
+padding:14px;
+border-radius:12px;
+}
+
+label{
+font-size:13px;
+}
+
 input,select{
 width:100%;
-padding:9px;
-margin:6px 0 12px;
-border-radius:10px;
-border:1px solid #ccd6ea;
-background:#f7fbff;
+padding:6px;
+margin-top:4px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #cfdaf0;
 }
+
 button{
 width:100%;
-padding:11px;
+height:36px;
 border:none;
-border-radius:12px;
+border-radius:10px;
 background:#5aa2ff;
 color:white;
 font-weight:bold;
 cursor:pointer;
 }
-.result{margin-top:10px;font-weight:bold;color:#e24a5a;}
-canvas{background:white;border-radius:12px;}
+
+.result{
+margin-top:10px;
+font-weight:bold;
+color:#e24a5a;
+}
+
+.graphPanel{
+margin-top:25px;
+}
+
+.tabs{
+display:flex;
+gap:8px;
+margin-bottom:10px;
+flex-wrap:wrap;
+}
+.tabs button{
+flex:1;
+background:#dbe9ff;
+color:#234;
+height:30px;
+}
+.tabs button.active{
+background:#5aa2ff;
+color:white;
+}
+
+canvas{
+background:white;
+border-radius:12px;
+}
 </style>
+
 </head>
 
 <body>
+<div class="wrapper">
 
 <header>
 <h1>⭐ 별과바다 부족 계산기 ⭐</h1>
 <div class="creator">제작자 : 라프땅</div>
-<div>최종 수정일 : 2026년 02월 25일</div>
+<div>최종 수정일 : 2026-02-25</div>
 </header>
 
-<div class="container">
+<div class="grid">
 
-<!-- 좌측 -->
+<!-- 좌측 확률 -->
+
 <div class="panel">
-<h2>초기치 8등급 확률</h2>
+<label>페트 이름</label>
+<input id="petName" type="text" placeholder="이름 입력 (키보드 입력 가능)">
 
-페트 이름
-<select id="purePet"></select>
+<label>HP</label> <input id="hp">
 
-공격 초기치
-<input id="hp">
-방어 초기치
-<input id="atk">
-순발 초기치
-<input id="def">
-내구 초기치
-<input id="agi">
+<label>공격</label> <input id="atk">
 
-<button onclick="runSRank()">계산</button>
-<div class="result" id="pureResult">-</div>
+<label>방어</label> <input id="def">
+
+<label>순발</label> <input id="agi">
+
+<button id="calcProb">8등급 확률 계산</button>
+
+<div class="result" id="probResult">-</div>
 </div>
 
-<!-- 중앙 -->
-<div class="panel">
-<h2>성장 분석</h2>
+<!-- 중앙 S초기치 -->
 
-페트 이름
+<div class="panel">
+<label>분석할 페트 선택</label>
 <select id="petSelect"></select>
 
-<h3>S 초기치</h3>
-공<input id="s_atk" readonly>
-방<input id="s_def" readonly>
-순<input id="s_agi" readonly>
-내<input id="s_hp" readonly>
+<label>S초기 HP</label> <input id="s_hp" readonly>
 
-현재 레벨
-<input id="curLv" value="50">
+<label>S초기 공격</label> <input id="s_atk" readonly>
 
-현재 공격
-<input id="cur_atk">
-현재 방어
-<input id="cur_def">
-현재 순발
-<input id="cur_agi">
-현재 내구
-<input id="cur_hp">
+<label>S초기 방어</label> <input id="s_def" readonly>
 
-<button onclick="analyze()">120레벨 기대 분석</button>
-<div class="result" id="futureResult">-</div>
+<label>S초기 순발</label> <input id="s_agi" readonly>
+
+<button id="loadGraph">성장 그래프 보기</button>
+
 </div>
 
-<!-- 우측 -->
-<div class="panel">
-<h2>150레벨 성장 그래프</h2>
-<canvas id="growthChart"></canvas>
+</div>
+
+<!-- 그래프 -->
+
+<div class="graphPanel">
+<div class="tabs">
+<button class="tab active" data-type="hp">내구</button>
+<button class="tab" data-type="atk">공격</button>
+<button class="tab" data-type="def">방어</button>
+<button class="tab" data-type="agi">순발</button>
+<button class="tab" data-type="sum">총성장</button>
+</div>
+
+<canvas id="growthChart" height="110"></canvas>
+
 </div>
 
 </div>
 
 <script src="pet.js"></script>
+
 </body>
 </html>
