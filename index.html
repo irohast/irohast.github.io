@@ -3,116 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <title>⭐별과바다 부족 계산기⭐</title>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 body{
-    margin:0;
-    font-family: "Pretendard", Arial, sans-serif;
-    background:#eef5ff; /* 연한 파스텔 블루 */
+margin:0;
+font-family:Pretendard, Arial;
+background:#eef5ff;
 }
-
-/* 상단 */
 header{
-    background:linear-gradient(180deg,#79b7ff,#a8d1ff);
-    text-align:center;
-    padding:22px 10px 18px 10px;
-    box-shadow:0 3px 12px rgba(0,0,0,0.15);
+background:linear-gradient(#7fbaff,#a9d2ff);
+text-align:center;
+padding:22px 10px 18px;
+color:white;
 }
-header h1{
-    margin:0;
-    color:white;
-    font-size:30px;
-    letter-spacing:1px;
-}
-.creator{
-    margin-top:6px;
-    color:#b74b5a; /* 밝은 버건디 */
-    font-weight:bold;
-}
-.date{
-    color:#ffffff;
-    opacity:0.9;
-    font-size:13px;
-}
-
-/* 레이아웃 */
+.creator{color:#b54b5c;font-weight:bold;}
 .container{
-    display:flex;
-    gap:22px;
-    padding:25px;
+display:flex;
+gap:22px;
+padding:24px;
 }
-
 .panel{
-    background:#ffffff;
-    border-radius:16px;
-    padding:18px;
-    width:33%;
-    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+background:white;
+border-radius:16px;
+padding:18px;
+width:33%;
+box-shadow:0 8px 20px rgba(0,0,0,0.08);
 }
-
-.panel h2{
-    margin-top:0;
-}
-
-/* 입력 UI */
-label{
-    font-size:14px;
-    color:#333;
-}
-
 input,select{
-    width:100%;
-    padding:9px;
-    margin-top:6px;
-    margin-bottom:12px;
-    border-radius:10px;
-    border:1px solid #ccd6ea;
-    background:#f7fbff;
+width:100%;
+padding:9px;
+margin:6px 0 12px;
+border-radius:10px;
+border:1px solid #ccd6ea;
+background:#f7fbff;
 }
-
-.readonly{
-    background:#e9f1fb;
-}
-
-/* 버튼 */
 button{
-    width:100%;
-    padding:11px;
-    border:none;
-    border-radius:12px;
-    background:#5aa2ff;
-    color:white;
-    font-weight:bold;
-    font-size:15px;
-    cursor:pointer;
+width:100%;
+padding:11px;
+border:none;
+border-radius:12px;
+background:#5aa2ff;
+color:white;
+font-weight:bold;
+cursor:pointer;
 }
-button:hover{
-    background:#3d8df7;
-}
-
-/* 결과 */
-.result{
-    margin-top:12px;
-    font-weight:bold;
-    font-size:18px;
-    color:#e24a5a;
-}
-
-canvas{
-    background:white;
-    border-radius:12px;
-}
+.result{margin-top:10px;font-weight:bold;color:#e24a5a;}
+canvas{background:white;border-radius:12px;}
 </style>
 </head>
 
 <body>
 
 <header>
-    <h1>⭐ 별과바다 부족 계산기 ⭐</h1>
-    <div class="creator">제작자 : 라프땅</div>
-    <div class="date">최종 수정일 : 2026년 02월 25일</div>
+<h1>⭐ 별과바다 부족 계산기 ⭐</h1>
+<div class="creator">제작자 : 라프땅</div>
+<div>최종 수정일 : 2026년 02월 25일</div>
 </header>
 
 <div class="container">
@@ -121,22 +67,19 @@ canvas{
 <div class="panel">
 <h2>초기치 8등급 확률</h2>
 
-<label>페트 이름</label>
-<select id="purePetSelect"></select>
+페트 이름
+<select id="purePet"></select>
 
-<label>공격 초기치</label>
-<input id="l_atk" type="number">
+공격 초기치
+<input id="hp">
+방어 초기치
+<input id="atk">
+순발 초기치
+<input id="def">
+내구 초기치
+<input id="agi">
 
-<label>방어 초기치</label>
-<input id="l_def" type="number">
-
-<label>순발 초기치</label>
-<input id="l_agi" type="number">
-
-<label>내구 초기치</label>
-<input id="l_hp" type="number">
-
-<button onclick="calcPure()">계산</button>
+<button onclick="runSRank()">계산</button>
 <div class="result" id="pureResult">-</div>
 </div>
 
@@ -144,42 +87,28 @@ canvas{
 <div class="panel">
 <h2>성장 분석</h2>
 
-<label>페트 이름</label>
-<select id="petSelect" onchange="loadPet()"></select>
+페트 이름
+<select id="petSelect"></select>
 
 <h3>S 초기치</h3>
-<label>공</label>
-<input id="s_atk" class="readonly" readonly>
-<label>방</label>
-<input id="s_def" class="readonly" readonly>
-<label>순</label>
-<input id="s_agi" class="readonly" readonly>
-<label>내</label>
-<input id="s_hp" class="readonly" readonly>
+공<input id="s_atk" readonly>
+방<input id="s_def" readonly>
+순<input id="s_agi" readonly>
+내<input id="s_hp" readonly>
 
-<h3>내 1레벨 초기치</h3>
-<label>공</label>
-<input id="my_atk" type="number">
-<label>방</label>
-<input id="my_def" type="number">
-<label>순</label>
-<input id="my_agi" type="number">
-<label>내</label>
-<input id="my_hp" type="number">
+현재 레벨
+<input id="curLv" value="50">
 
-<label>현재 레벨</label>
-<input id="curLv" type="number" value="50">
+현재 공격
+<input id="cur_atk">
+현재 방어
+<input id="cur_def">
+현재 순발
+<input id="cur_agi">
+현재 내구
+<input id="cur_hp">
 
-<label>현재 공격</label>
-<input id="cur_atk" type="number">
-<label>현재 방어</label>
-<input id="cur_def" type="number">
-<label>현재 순발</label>
-<input id="cur_agi" type="number">
-<label>현재 내구</label>
-<input id="cur_hp" type="number">
-
-<button onclick="analyze()">120레벨 기대값 계산</button>
+<button onclick="analyze()">120레벨 기대 분석</button>
 <div class="result" id="futureResult">-</div>
 </div>
 
