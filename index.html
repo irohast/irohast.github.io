@@ -1,189 +1,237 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⭐ 별과바다 부족 펫 계산기 ⭐</title>
+    <title>⭐별과바다 부족 펫 계산기⭐</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="pet.js"></script>
+    <!-- 라이브러리 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- 계산 엔진 (절대 삭제 금지) -->
+    <script src="pet.js"></script>
 
 <style>
+
+/* ===== 배경 ===== */
 body{
-    margin:0;
+    background: linear-gradient(180deg,#dbeafe,#bfdbfe);
     min-height:100vh;
-    background:linear-gradient(180deg,#dbeafe,#bfdbfe);
-    font-family:'Segoe UI',sans-serif;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:#1e293b;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-.container{
-    width:380px;
-    padding:30px;
-    border-radius:22px;
+/* ===== 중앙 박스 ===== */
+.main-box{
+    max-width:720px;
+    margin:40px auto;
     background:#2f4363;
+    border-radius:22px;
+    padding:30px;
     box-shadow:0 18px 40px rgba(0,0,0,0.25);
-    text-align:center;
     color:white;
 }
 
-h1{
-    margin:0 0 5px 0;
+/* ===== 타이틀 ===== */
+.site-title{
+    text-align:center;
+    font-size:32px;
+    font-weight:800;
+    margin-bottom:5px;
 }
 
 .creator{
-    font-size:15px;
-    font-weight:800;
-    color:#b56576;
-    margin-bottom:20px;
-}
-
-.stat{
-    margin:10px 0;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.stat label{
-    width:70px;
-    text-align:left;
-}
-
-input{
-    width:120px;
-    padding:8px;
-    border-radius:10px;
-    border:none;
     text-align:center;
-    font-size:15px;
+    color:#b56576;
+    font-weight:700;
+    margin-bottom:25px;
 }
 
-button{
-    margin-top:20px;
-    width:100%;
-    padding:12px;
+/* ===== 입력 ===== */
+.form-control{
+    height:44px;
+    border-radius:12px;
+    text-align:center;
+    font-size:16px;
+}
+
+.stat-label{
+    font-weight:600;
+    margin-top:10px;
+}
+
+/* ===== 버튼 ===== */
+.btn-primary{
+    background:#4fc3ff;
     border:none;
     border-radius:14px;
-    background:#4fc3ff;
-    color:#001b3a;
     font-size:17px;
     font-weight:bold;
-    cursor:pointer;
+    height:50px;
 }
 
-button:hover{
+.btn-primary:hover{
     background:#7dd3fc;
 }
 
-table{
-    width:100%;
+/* ===== S초기치 박스 ===== */
+.result-box{
+    background:#f1f5f9;
+    color:#111;
+    border-radius:16px;
+    padding:15px;
     margin-top:20px;
+}
+
+/* ===== 자동완성 ===== */
+#pet-suggestions-box{
+    background:white;
+    border-radius:12px;
+    box-shadow:0 10px 20px rgba(0,0,0,0.2);
+}
+
+#pet-suggestions li{
+    padding:10px;
+    cursor:pointer;
+    list-style:none;
+}
+#pet-suggestions li:hover{
+    background:#e2e8f0;
+}
+
+/* ===== 결과 테이블 ===== */
+.table{
     background:white;
     color:black;
-    border-radius:10px;
+    border-radius:12px;
     overflow:hidden;
-    font-size:13px;
 }
 
-th, td{
-    padding:6px;
-    text-align:center;
-}
-
-thead{
-    background:#4fc3ff;
-    color:#001b3a;
-    font-weight:bold;
-}
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="main-box">
 
-<h1>⭐ 별과바다 부족 계산기 ⭐</h1>
-<div class="creator">제작 : 이로하</div>
+    <div class="site-title">⭐별과바다 부족 계산기⭐</div>
+    <div class="creator">제작 : 라프땅</div>
 
-<div class="stat">
-    <label>이름</label>
-    <input id="name" type="text" placeholder="예: 무이">
-</div>
+    <!-- 페트 검색 -->
+    <div class="form-group">
+        <label class="stat-label">페트 이름</label>
+        <div class="input-group">
+            <input type="text" class="form-control" id="name" placeholder="페트를 입력하세요">
+            <span class="input-group-btn">
+                <button class="btn btn-primary" id="search">
+                    검색
+                </button>
+            </span>
+        </div>
 
-<div class="stat">
-    <label>HP</label>
-    <input id="hp" type="number">
-</div>
+        <div id="pet-suggestions-box" style="display:none;">
+            <ul id="pet-suggestions"></ul>
+        </div>
+    </div>
 
-<div class="stat">
-    <label>ATK</label>
-    <input id="atk" type="number">
-</div>
+    <!-- 스탯 입력 -->
+    <div class="row">
+        <div class="col-xs-6">
+            <label class="stat-label">HP</label>
+            <input type="number" class="form-control" id="hp">
+        </div>
+        <div class="col-xs-6">
+            <label class="stat-label">ATK</label>
+            <input type="number" class="form-control" id="atk">
+        </div>
+        <div class="col-xs-6">
+            <label class="stat-label">DEF</label>
+            <input type="number" class="form-control" id="def">
+        </div>
+        <div class="col-xs-6">
+            <label class="stat-label">AGI</label>
+            <input type="number" class="form-control" id="agi">
+        </div>
+    </div>
 
-<div class="stat">
-    <label>DEF</label>
-    <input id="def" type="number">
-</div>
+    <br>
 
-<div class="stat">
-    <label>AGI</label>
-    <input id="agi" type="number">
-</div>
+    <button class="btn btn-primary btn-block" id="calculate">결과 계산하기</button>
 
-<button id="calculate">결과 계산하기</button>
+    <!-- S 초기치 표시 -->
+    <div id="myPet" class="result-box" style="display:none;">
+        <table class="table">
+            <tbody></tbody>
+        </table>
+    </div>
 
-<table id="myPet">
-<tbody></tbody>
-</table>
-
-<table id="result">
-<thead>
-<tr>
-<th>순번</th>
-<th>등급</th>
-<th>HP</th>
-<th>ATK</th>
-<th>DEF</th>
-<th>AGI</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
+    <!-- 결과 테이블 -->
+    <div id="result-master-container" style="display:none;">
+        <div id="result" class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>순번</th>
+                        <th>등급</th>
+                        <th>HP</th>
+                        <th>ATK</th>
+                        <th>DEF</th>
+                        <th>AGI</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
 
 </div>
 
 <script>
-let pet = [];
-let result = [];
-let btnName = "calculate";
+var pet = [];
+let btnName="";
+const result=[];
+
+function loadPetData(){
+    return $.getJSON('pets.json?v='+new Date().getTime())
+    .done(data=>pet=data);
+}
+
+function showSuggestions(val){
+    val=val.toLowerCase();
+    let matches=pet.filter(p=>p.name.toLowerCase().includes(val));
+    let ul=$("#pet-suggestions");
+    ul.empty();
+    if(matches.length){
+        matches.slice(0,10).forEach(p=>ul.append('<li>'+p.name+'</li>'));
+        $("#pet-suggestions-box").show();
+    }else $("#pet-suggestions-box").hide();
+}
 
 $(document).ready(function(){
 
-    $.getJSON("./pets.json", function(data){
-        pet = data;
+    loadPetData();
+
+    $("#name").on("input",function(){
+        showSuggestions($(this).val());
     });
 
-    $("#calculate").click(function(){
+    $(document).on("click","#pet-suggestions li",function(){
+        $("#name").val($(this).text());
+        $("#pet-suggestions-box").hide();
+        $("#search").click();
+    });
 
-        const name = $("#name").val().trim();
-        const foundPet = pet.find(p => p.name === name);
+    $("#search,#calculate").on("click",function(){
 
-        if(!foundPet){
-            alert("펫 이름을 정확히 입력하세요.");
-            return;
-        }
+        const foundPet=pet.find(p=>p.name===$("#name").val());
+        if(!foundPet){alert("페트를 찾을 수 없습니다");return;}
 
-        btnName = "calculate";
+        btnName=this.id;
+        $("#myPet").show();
+        $("#result-master-container").show();
 
-        $("#myPet tbody").empty();
-        $("#result tbody").empty();
-
-        const copiedPet = JSON.parse(JSON.stringify(foundPet));
-
+        const copiedPet=JSON.parse(JSON.stringify(foundPet));
         setSRank(copiedPet);
         setBase(foundPet);
     });
