@@ -212,7 +212,11 @@ function print() {
 
     // 8등급이 0건이어도 (8등급: 0.00%)라고 정상 표시됩니다.
     $("#srank-label").html('S 초기치<br><span style="color:#d9534f; font-size:11px; font-weight:bold;">(8등급: ' + sRankRate + '%)</span>');
-    
+    // ===== 계산 실패 처리 =====
+if (btnName == "calculate" && totalCount === 0) {
+    alert(`[${$("#name").val()}] 해당 초기치 페트가 실존하면\n라프땅에게 문의 부탁드립니다.`);
+    return;
+}
     alert(message);
 }
 
