@@ -17,7 +17,6 @@ function setSRank(copiedPet) {
     else if (statSum >= 80)  { rank = 555; }
     else { rank = 575; }
 
-    // 초기치 계산 (base 2 + bonus 2.5를 합산하여 4.5 적용)
     const calcHp  = preciseRound(copiedPet.initnum * (copiedPet.hp + 4.5) / 100);
     const calcAtk = preciseRound(copiedPet.initnum * (copiedPet.atk + 4.5) / 100);
     const calcDef = preciseRound(copiedPet.initnum * (copiedPet.def + 4.5) / 100);
@@ -39,24 +38,22 @@ function setSRank(copiedPet) {
     const resultUpAgi = upAgi;
     const resultSum   = preciseRound(resultUpAtk + resultUpDef + resultUpAgi);
 
-    // 테이블 삽입 (id="srank-label" 부여)
-    $('#myPet tbody').append(''
-        + '<tr class="srank">'
-        + '<td id="srank-label" style="vertical-align: middle;">S 초기치</td>'
-        + '<td>' + limitDecimalPlaces(resultHp, 2) + '</td>'
-        + '<td>' + limitDecimalPlaces(resultAtk, 2) + '</td>'
-        + '<td>' + limitDecimalPlaces(resultDef, 2) + '</td>'
-        + '<td>' + limitDecimalPlaces(resultAgi, 2) + '</td>'
-        + '<td></td>'
-        + '</tr>'
-        + '<tr class="srank">'
-        + '<td>S 성장률</td>'
-        + '<td>' + resultUpHp.toFixed(2) + '</td>'
-        + '<td>' + resultUpAtk.toFixed(2) + '</td>'
-        + '<td>' + resultUpDef.toFixed(2) + '</td>'
-        + '<td>' + resultUpAgi.toFixed(2) + '</td>'
-        + '<td>' + resultSum.toFixed(2) + '</td>'
-        + '</tr>'
+    $('#myPet tbody').append(
+        '<tr class="srank">' +
+        '<td id="srank-label">S 초기치</td>' +
+        '<td>' + limitDecimalPlaces(resultHp, 2) + '</td>' +
+        '<td>' + limitDecimalPlaces(resultAtk, 2) + '</td>' +
+        '<td>' + limitDecimalPlaces(resultDef, 2) + '</td>' +
+        '<td>' + limitDecimalPlaces(resultAgi, 2) + '</td>' +
+        '<td></td></tr>' +
+
+        '<tr class="srank">' +
+        '<td>S 성장률</td>' +
+        '<td>' + resultUpHp.toFixed(2) + '</td>' +
+        '<td>' + resultUpAtk.toFixed(2) + '</td>' +
+        '<td>' + resultUpDef.toFixed(2) + '</td>' +
+        '<td>' + resultUpAgi.toFixed(2) + '</td>' +
+        '<td>' + resultSum.toFixed(2) + '</td></tr>'
     );
 
     if (btnName == "search") {
@@ -64,161 +61,83 @@ function setSRank(copiedPet) {
         $("#atk").val(parseInt(resultAtk, 10));
         $("#def").val(parseInt(resultDef, 10));
         $("#agi").val(parseInt(resultAgi, 10));
+
+        // ★★★ 매우 중요 : 1레벨 초기치 저장 (성장 감정용)
+        $("#hp").data("init", resultHp);
+        $("#atk").data("init", resultAtk);
+        $("#def").data("init", resultDef);
+        $("#agi").data("init", resultAgi);
     }
 }
 
-function setBase(foundPet) {
-    $('#result tbody').empty();
-    result.length = 0;
-    const baseInit = -2;
-    let base = {"hp":-2,"atk":-2,"def":-2,"agi":-2};
-    
-    for (let i = 0; i < 5; i++) {
-        for (let ii = 0; ii < 5; ii++) {
-            for (let iii = 0; iii < 5; iii++) {
-                for (let iiii = 0; iiii < 5; iiii++) {
-                    setBonus(foundPet, base);
-                    base.hp++;
-                    if (base.hp == 3) base.hp = baseInit;
-                }
-                base.atk++;
-                if (base.atk == 3) base.atk = baseInit;
-            }
-            base.def++;
-            if (base.def == 3) base.def = baseInit;
-        }
-        base.agi++;
-        if (base.agi == 3) base.agi = baseInit;
-    }
-    print();
-}
+/* -------------------------------
+   성장 기반 8등급 확신도 계산기
+-------------------------------- */
 
-function setBonus(foundPet, base) {
-    let bonus = {"hp":0,"atk":0,"def":0,"agi":0};
-    for (let i = 0; i < 11; i++) {
-        for (let ii = 0; ii < 11; ii++) {
-            for (let iii = 0; iii < 11; iii++) {
-                for (let iiii = 0; iiii < 11; iiii++) {
-                    if (bonus.hp + bonus.atk + bonus.def + bonus.agi == 10) {
-                        addData(foundPet, base, bonus);
-                    }
-                    bonus.hp++;
-                    if (bonus.hp == 11) bonus.hp = 0;
-                }
-                bonus.atk++;
-                if (bonus.atk == 11) bonus.atk = 0;
-            }
-            bonus.def++;
-            if (bonus.def == 11) bonus.def = 0;
-        }
-        bonus.agi++;
-        if (bonus.agi == 11) bonus.agi = 0;
-    }
-}
+function estimateRankConfidence(foundPet, level, nowStat){
 
-function addData(foundPet, base, bonus) {
-    const hp  = preciseRound(foundPet.initnum * (foundPet.hp  + base.hp  + bonus.hp)  / 100);
-    const atk = preciseRound(foundPet.initnum * (foundPet.atk + base.atk + bonus.atk) / 100);
-    const def = preciseRound(foundPet.initnum * (foundPet.def + base.def + bonus.def) / 100);
-    const agi = preciseRound(foundPet.initnum * (foundPet.agi + base.agi + bonus.agi) / 100);
-    
-    let stat = {"rank":0,"hp":0,"atk":0,"def":0,"agi":0,"baseHp":0,"baseAtk":0,"baseDef":0,"baseAgi":0,"bonusHp":0,"bonusAtk":0,"bonusDef":0,"bonusAgi":0};
-    
-    stat.hp  = preciseRound((hp * 4) + atk + def + agi);
-    stat.atk = preciseRound((hp * 0.1) + atk + (def * 0.1) + (agi * 0.05));
-    stat.def = preciseRound((hp * 0.1) + (atk * 0.1) + def + (agi * 0.05));
-    stat.agi = agi;
+    const growCount = level - 1;
 
-    if (btnName == "calculate") {
-        if (Math.floor(stat.hp)  === parseInt($("#hp").val(), 10) &&
-            Math.floor(stat.atk) === parseInt($("#atk").val(), 10) &&
-            Math.floor(stat.def) === parseInt($("#def").val(), 10) &&
-            Math.floor(stat.agi) === parseInt($("#agi").val(), 10)) {
-            stat.rank     = base.hp + base.atk + base.def + base.agi;
-            stat.baseHp   = base.hp; stat.baseAtk  = base.atk; stat.baseDef  = base.def; stat.baseAgi  = base.agi;
-            stat.bonusHp  = bonus.hp; stat.bonusAtk = bonus.atk; stat.bonusDef = bonus.def; stat.bonusAgi = bonus.agi;
-            result.push(stat);
-        }
-    } else if (btnName == "search") {
-        if (base.hp + base.atk + base.def + base.agi == 8) {
-            stat.rank     = 8;
-            stat.baseHp   = base.hp; stat.baseAtk  = base.atk; stat.baseDef  = base.def; stat.baseAgi  = base.agi;
-            stat.bonusHp  = bonus.hp; stat.bonusAtk = bonus.atk; stat.bonusDef = bonus.def; stat.bonusAgi = bonus.agi;
-            result.push(stat);
-        }
-    }
-}
+    const g = {
+        hp: foundPet.hp,
+        atk: foundPet.atk,
+        def: foundPet.def,
+        agi: foundPet.agi
+    };
 
-function print() {
-    result.sort((a, b) => b.rank - a.rank || b.hp - a.hp);
+    const init = {
+        hp: parseFloat($("#hp").data("init")),
+        atk: parseFloat($("#atk").data("init")),
+        def: parseFloat($("#def").data("init")),
+        agi: parseFloat($("#agi").data("init"))
+    };
 
-    $('#result tbody').empty();
-    for (let i = 0; i < result.length; i++) {
-        $('#result tbody').append(''
-            + '<tr>'
-            + '<td>' + (i + 1) + '</td>'
-            + '<td class="' + (result[i].rank === 8 ? 'text-danger' : '') + '">' + result[i].rank + '</td>'
-            + '<td>' + limitDecimalPlaces(result[i].hp,  2) + '[' + result[i].baseHp  + '](' + result[i].bonusHp  + ')</td>'
-            + '<td>' + limitDecimalPlaces(result[i].atk, 2) + '[' + result[i].baseAtk + '](' + result[i].bonusAtk + ')</td>'
-            + '<td>' + limitDecimalPlaces(result[i].def, 2) + '[' + result[i].baseDef + '](' + result[i].bonusDef + ')</td>'
-            + '<td>' + limitDecimalPlaces(result[i].agi, 2) + '[' + result[i].baseAgi + '](' + result[i].bonusAgi + ')</td>'
-            + '</tr>'
-        );
-        if (i + 1 >= 300) break;
+    if(!init.hp) {
+        return { avgB:"?", confidence:"0" };
     }
 
-    let message = '';
-    let sRankRate = "0.00"; // 기본값 설정
-    const totalCount = result.length;
+    let growth = {
+        hp: nowStat.hp - init.hp,
+        atk: nowStat.atk - init.atk,
+        def: nowStat.def - init.def,
+        agi: nowStat.agi - init.agi
+    };
 
-    if (btnName == "search") {
-        const name = $("#name").val();
-        message += `[${name}]의 8등급 분포는 다음과 같습니다!`;
-        sRankRate = "계산중";
+    let baseGrowth = {
+        hp: g.hp * growCount,
+        atk: g.atk * growCount,
+        def: g.def * growCount,
+        agi: g.agi * growCount
+    };
 
-        let countMap = {};
-        result.forEach(obj => {
-            let key = Math.floor(obj.hp) + ', ' + Math.floor(obj.atk) + ', ' + Math.floor(obj.def) + ', ' + Math.floor(obj.agi);
-            countMap[key] = (countMap[key] || 0) + 1;
-        });
-
-        if (totalCount > 0) {
-            let statCounts = Object.keys(countMap).map(key => ({
-                key: key,
-                cnt: countMap[key],
-                per: (countMap[key] / totalCount * 100).toFixed(2)
-            })).sort((a, b) => b.cnt - a.cnt);
-
-            statCounts.forEach(obj => {
-                message += '\n' + obj.key + ' ' + obj.cnt + '건 (' + obj.per + '%)';
-            });
-        }
-    } else if (btnName == "calculate") {
-        let rankCounts = {};
-        result.forEach(r => { rankCounts[r.rank] = (rankCounts[r.rank] || 0) + 1; });
-
-        // 8등급이 존재하고 전체 결과가 있을 때만 확률 계산
-        if (totalCount > 0 && rankCounts[8]) {
-            sRankRate = (rankCounts[8] / totalCount * 100).toFixed(2);
-        }
-
-        const ranks = Object.keys(rankCounts).sort((a, b) => b - a);
-        message += `[${$("#name").val()}] 계산 완료!\n`;
-        ranks.forEach(rank => {
-            let per = (rankCounts[rank] / totalCount * 100).toFixed(2);
-            message += `${rank} 등급: ${rankCounts[rank]} 건 (${per}%) \n`;
-        });
+    function calcB(growth, base){
+        if(base<=0 || growth<=0) return 999;
+        return (growth/base)*10000;
     }
 
-    // 8등급이 0건이어도 (8등급: 0.00%)라고 정상 표시됩니다.
-    $("#srank-label").html('S 초기치<br><span style="color:#d9534f; font-size:11px; font-weight:bold;">(8등급: ' + sRankRate + '%)</span>');
-    // ===== 계산 실패 처리 =====
-if (btnName == "calculate" && totalCount === 0) {
-    alert(`[${$("#name").val()}] 해당 초기치 페트가 실존하면\n라프땅에게 문의 부탁드립니다.`);
-    return;
+    let B = {
+        hp: calcB(growth.hp, baseGrowth.hp),
+        atk: calcB(growth.atk, baseGrowth.atk),
+        def: calcB(growth.def, baseGrowth.def),
+        agi: calcB(growth.agi, baseGrowth.agi)
+    };
+
+    let avgB = (B.hp+B.atk+B.def+B.agi)/4;
+
+    let dist = Math.abs(avgB-450);
+    let raw = Math.max(0,100 - dist*0.6);
+
+    // 레벨 신뢰도 보정
+    let reliability = Math.min(1, level/90);
+    let confidence = raw*reliability;
+
+    return {
+        avgB: avgB.toFixed(2),
+        confidence: confidence.toFixed(1)
+    };
 }
-    alert(message);
-}
+
+/* ---------- 공통 ---------- */
 
 function limitDecimalPlaces(number, places) {
     var power = Math.pow(10, places);
@@ -227,70 +146,4 @@ function limitDecimalPlaces(number, places) {
 
 function preciseRound(num) {
     return Math.round(num * 1e12) / 1e12;
-}
-/* ================================
-   성장 기반 8등급 확신도 계산기
-================================ */
-
-function estimateRankConfidence(foundPet, level, nowStat){
-
-    // 종족 성장값
-    const g = {
-        hp: foundPet.hp,
-        atk: foundPet.atk,
-        def: foundPet.def,
-        agi: foundPet.agi
-    };
-
-    // 초기 스탯 (S초기치에서 이미 채워짐)
-    const init = {
-        hp: parseFloat($("#hp").data("init")) || nowStat.hp,
-        atk: parseFloat($("#atk").data("init")) || nowStat.atk,
-        def: parseFloat($("#def").data("init")) || nowStat.def,
-        agi: parseFloat($("#agi").data("init")) || nowStat.agi
-    };
-
-    // 레벨 증가량
-    let growth = {
-        hp: nowStat.hp - init.hp,
-        atk: nowStat.atk - init.atk,
-        def: nowStat.def - init.def,
-        agi: nowStat.agi - init.agi
-    };
-
-    // 예상 누적 종족 성장
-    let baseGrowth = {
-        hp: g.hp * level,
-        atk: g.atk * level,
-        def: g.def * level,
-        agi: g.agi * level
-    };
-
-    // B값 역산
-    let B = {
-        hp: (growth.hp / baseGrowth.hp) * 10000,
-        atk: (growth.atk / baseGrowth.atk) * 10000,
-        def: (growth.def / baseGrowth.def) * 10000,
-        agi: (growth.agi / baseGrowth.agi) * 10000
-    };
-
-    let avgB = (B.hp + B.atk + B.def + B.agi) / 4;
-
-    // 8등급 B영역 (경험적 범위)
-    const S_min = 430;
-    const S_max = 470;
-
-    let confidence;
-
-    if(avgB < S_min) confidence = 99;
-    else if(avgB > 560) confidence = 0;
-    else{
-        let dist = Math.abs(avgB - 450);
-        confidence = Math.max(0, 100 - dist * 0.6);
-    }
-
-    return {
-        avgB: avgB.toFixed(2),
-        confidence: confidence.toFixed(1)
-    };
 }
