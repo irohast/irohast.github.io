@@ -228,3 +228,69 @@ function limitDecimalPlaces(number, places) {
 function preciseRound(num) {
     return Math.round(num * 1e12) / 1e12;
 }
+/* ================================
+   성장 기반 8등급 확신도 계산기
+================================ */
+
+function estimateRankConfidence(foundPet, level, nowStat){
+
+    // 종족 성장값
+    const g = {
+        hp: foundPet.hp,
+        atk: foundPet.atk,
+        def: foundPet.def,
+        agi: foundPet.agi
+    };
+
+    // 초기 스탯 (S초기치에서 이미 채워짐)
+    const init = {
+        hp: parseFloat($("#hp").data("init")) || nowStat.hp,
+        atk: parseFloat($("#atk").data("init")) || nowStat.atk,
+        def: parseFloat($("#def").data("init")) || nowStat.def,
+        agi: parseFloat($("#agi").data("init")) || nowStat.agi
+    };
+
+    // 레벨 증가량
+    let growth = {
+        hp: nowStat.hp - init.hp,
+        atk: nowStat.atk - init.atk,
+        def: nowStat.def - init.def,
+        agi: nowStat.agi - init.agi
+    };
+
+    // 예상 누적 종족 성장
+    let baseGrowth = {
+        hp: g.hp * level,
+        atk: g.atk * level,
+        def: g.def * level,
+        agi: g.agi * level
+    };
+
+    // B값 역산
+    let B = {
+        hp: (growth.hp / baseGrowth.hp) * 10000,
+        atk: (growth.atk / baseGrowth.atk) * 10000,
+        def: (growth.def / baseGrowth.def) * 10000,
+        agi: (growth.agi / baseGrowth.agi) * 10000
+    };
+
+    let avgB = (B.hp + B.atk + B.def + B.agi) / 4;
+
+    // 8등급 B영역 (경험적 범위)
+    const S_min = 430;
+    const S_max = 470;
+
+    let confidence;
+
+    if(avgB < S_min) confidence = 99;
+    else if(avgB > 560) confidence = 0;
+    else{
+        let dist = Math.abs(avgB - 450);
+        confidence = Math.max(0, 100 - dist * 0.6);
+    }
+
+    return {
+        avgB: avgB.toFixed(2),
+        confidence: confidence.toFixed(1)
+    };
+}
