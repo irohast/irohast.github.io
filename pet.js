@@ -3,7 +3,7 @@ let selectedPet = null;
 
 /* 펫 데이터 로드 */
 $(function(){
-    $.getJSON("pets.json",function(data){
+    $.getJSON("./pets.json?v="+Date.now(),function(data){
         pet=data;
     });
 });
@@ -125,4 +125,5 @@ function drawGraph(level,growth,base){
             scales:{y:{beginAtZero:true}}
         }
     });
+
 }
