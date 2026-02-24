@@ -6,15 +6,11 @@
 
 <title>별과바다 부족 펫 계산기</title>
 
-<!-- jquery (엔진보다 반드시 먼저) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-<!-- 계산 엔진 -->
 <script src="pet.js"></script>
 
 <style>
 
-/* 배경 */
 body{
     margin:0;
     min-height:100vh;
@@ -25,7 +21,6 @@ body{
     padding:40px 10px;
 }
 
-/* 메인 카드 */
 .wrapper{
     width:720px;
     max-width:95%;
@@ -36,7 +31,6 @@ body{
     color:white;
 }
 
-/* 타이틀 */
 .title{
     text-align:center;
     font-size:32px;
@@ -51,7 +45,6 @@ body{
     margin-bottom:25px;
 }
 
-/* 검색 */
 .searchbox{
     display:flex;
     margin-bottom:20px;
@@ -77,7 +70,6 @@ body{
     cursor:pointer;
 }
 
-/* 자동완성 */
 #suggest{
     position:absolute;
     top:46px;
@@ -96,7 +88,6 @@ body{
     background:#eee;
 }
 
-/* 스탯 입력 */
 .stats{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -117,7 +108,6 @@ body{
     font-size:15px;
 }
 
-/* 버튼 */
 .calcbtn{
     width:100%;
     height:50px;
@@ -131,7 +121,6 @@ body{
     cursor:pointer;
 }
 
-/* S초기치 박스 */
 #sbox{
     background:#f1f1f1;
     color:black;
@@ -141,7 +130,6 @@ body{
     display:none;
 }
 
-/* 결과표 */
 table{
     width:100%;
     background:white;
@@ -160,6 +148,44 @@ th,td{
     text-align:center;
 }
 
+/* ===== 성장 감정 박스 ===== */
+#growthBox{
+    margin-top:35px;
+    background:#1f2c44;
+    padding:20px;
+    border-radius:16px;
+}
+
+#growthBox input{
+    width:80px;
+    height:32px;
+    border-radius:8px;
+    border:none;
+    margin-left:5px;
+    padding-left:5px;
+}
+
+#growthResult{
+    margin-top:15px;
+    font-size:16px;
+    line-height:1.6;
+}
+
+.highlight{
+    color:#4fc3ff;
+    font-weight:bold;
+}
+
+.danger{
+    color:#ff6b6b;
+    font-weight:bold;
+}
+
+.good{
+    color:#4ade80;
+    font-weight:bold;
+}
+
 </style>
 </head>
 
@@ -168,16 +194,14 @@ th,td{
 <div class="wrapper">
 
 <div class="title">⭐ 별과바다 부족 계산기 ⭐</div>
-<div class="creator">제작 : 이로하</div>
+<div class="creator">제작 : 라프땅</div>
 
-<!-- 검색 -->
 <div class="searchbox">
     <input type="text" id="name" placeholder="페트 이름 입력">
     <button id="search">검색</button>
     <div id="suggest"></div>
 </div>
 
-<!-- 스탯 -->
 <div class="stats">
     <div class="stat"><label>HP</label><input id="hp" type="number"></div>
     <div class="stat"><label>ATK</label><input id="atk" type="number"></div>
@@ -187,12 +211,10 @@ th,td{
 
 <button class="calcbtn" id="calculate">결과 계산하기</button>
 
-<!-- S초기치 -->
 <div id="sbox">
     <table id="myPet"><tbody></tbody></table>
 </div>
 
-<!-- 결과 -->
 <div id="result">
 <table>
 <thead>
@@ -209,24 +231,37 @@ th,td{
 </table>
 </div>
 
+<!-- ===================== 성장 감정 추가 ===================== -->
+
+<div id="growthBox">
+
+<h3>📈 육성 감정 (정밀 예측)</h3>
+
+현재 레벨 :
+<input type="number" id="curLevel">
+
+<button id="growthCheck" class="calcbtn" style="height:40px;margin-top:15px">
+8등급 판별 & 120예측
+</button>
+
+<div id="growthResult"></div>
+
+</div>
+
 </div>
 
 <script>
 
-/* 전역 (엔진이 사용) */
 var pet=[];
 let btnName="";
 const result=[];
 
-/* 데이터 로드 */
 function loadPetData(){
     $.getJSON("pets.json?v="+new Date().getTime(),function(data){
         pet=data;
-        console.log("펫 로딩 완료:",pet.length);
     });
 }
 
-/* 자동완성 */
 $("#name").on("input",function(){
     let val=$(this).val().toLowerCase();
     if(!val){$("#suggest").hide();return;}
@@ -241,7 +276,6 @@ $(document).on("click","#suggest div",function(){
     $("#suggest").hide();
 });
 
-/* 검색(S초기치만) */
 $("#search").click(function(){
     let found=pet.find(p=>p.name===$("#name").val());
     if(!found){alert("페트를 찾을 수 없습니다");return;}
@@ -250,7 +284,6 @@ $("#search").click(function(){
     setSRank(JSON.parse(JSON.stringify(found)));
 });
 
-/* 계산 */
 $("#calculate").click(function(){
     let found=pet.find(p=>p.name===$("#name").val());
     if(!found){alert("페트를 찾을 수 없습니다");return;}
@@ -258,7 +291,47 @@ $("#calculate").click(function(){
     setBase(found);
 });
 
-/* 시작시 DB 로딩 */
+/* ===== 성장 감정 버튼 ===== */
+
+$("#growthCheck").click(function(){
+
+    let found=pet.find(p=>p.name===$("#name").val());
+    if(!found){ alert("페트를 먼저 검색하세요"); return; }
+
+    let level=parseInt($("#curLevel").val());
+    if(!level || level<2){ alert("레벨은 2 이상 입력하세요"); return; }
+
+    let nowStat={
+        hp:parseFloat($("#hp").val()),
+        atk:parseFloat($("#atk").val()),
+        def:parseFloat($("#def").val()),
+        agi:parseFloat($("#agi").val())
+    };
+
+    let res=estimateRankConfidence(found,level,nowStat);
+
+    /* 120예측 */
+    let predictedHP  = (nowStat.hp  + (120-level)*(nowStat.hp/level)).toFixed(1);
+    let predictedATK = (nowStat.atk + (120-level)*(nowStat.atk/level)).toFixed(1);
+    let predictedDEF = (nowStat.def + (120-level)*(nowStat.def/level)).toFixed(1);
+    let predictedAGI = (nowStat.agi + (120-level)*(nowStat.agi/level)).toFixed(1);
+
+    let colorClass="highlight";
+    if(res.confidence>80) colorClass="good";
+    if(res.confidence<40) colorClass="danger";
+
+    $("#growthResult").html(
+        "추정 B값 : <span class='highlight'>"+res.avgB+"</span><br>"+
+        "8등급 확신도 : <span class='"+colorClass+"'>"+res.confidence+"%</span><br><br>"+
+        "<b>📊 120레벨 예상 스탯</b><br>"+
+        "HP : "+predictedHP+"<br>"+
+        "ATK : "+predictedATK+"<br>"+
+        "DEF : "+predictedDEF+"<br>"+
+        "AGI : "+predictedAGI
+    );
+
+});
+
 loadPetData();
 
 </script>
