@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>별과바다 부족 펫 계산기</title>
+
+<style>
+body{
+    background:linear-gradient(180deg,#0c1b3a,#1e3c72);
+    font-family: 'Segoe UI', sans-serif;
+    text-align:center;
+    color:white;
+}
+
+.container{
+    width:420px;
+    margin:60px auto;
+    background:rgba(255,255,255,0.1);
+    padding:30px;
+    border-radius:20px;
+    backdrop-filter:blur(8px);
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+
+h1{
+    margin-bottom:5px;
+}
+
+.creator{
+    font-size:13px;
+    opacity:0.8;
+    margin-bottom:20px;
+}
+
+input{
+    width:70px;
+    padding:10px;
+    margin:6px;
+    font-size:16px;
+    border-radius:10px;
+    border:none;
+    text-align:center;
+}
+
+button{
+    margin-top:18px;
+    padding:12px 24px;
+    border:none;
+    border-radius:14px;
+    background:#4fc3ff;
+    color:#001b3a;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#82dbff;
+}
+
+.result{
+    margin-top:22px;
+    font-size:20px;
+    font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+    <h1>⭐ 별과바다 부족 계산기 ⭐</h1>
+    <div class="creator">제작 : 이로하</div>
+
+```
+<div>
+    HP <input id="hp" type="number"><br>
+    ATK <input id="atk" type="number"><br>
+    DEF <input id="def" type="number"><br>
+    AGI <input id="agi" type="number">
+</div>
+
+<button onclick="calc()">S급 가능성 확인</button>
+
+<div class="result" id="result">스탯을 입력하세요</div>
+```
+
+</div>
+
+<script src="calc.js"></script>
+
+</body>
+</html>
