@@ -224,3 +224,33 @@ function limitDecimalPlaces(number, places) {
 function preciseRound(num) {
     return Math.round(num * 1e12) / 1e12;
 }
+let pet = null;
+let result = [];
+let btnName = "calculate";
+
+// 펫 데이터 로드
+$(document).ready(function () {
+$.getJSON("./pets.json", function(data) {
+
+```
+    // 이름 입력하면 해당 펫 찾기
+    $("#name").on("change", function(){
+        const name = $(this).val().trim();
+
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].name === name) {
+                pet = data[i];
+                console.log("펫 로드 성공:", pet);
+                return;
+            }
+        }
+
+        alert("해당 펫을 찾을 수 없습니다.");
+    });
+
+}).fail(function(){
+    alert("pets.json을 불러오지 못했습니다. (경로 문제)");
+});
+```
+
+});
