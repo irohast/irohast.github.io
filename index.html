@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -7,6 +8,7 @@
 <title>별과바다 부족 펫 계산기</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <script src="pet.js"></script>
 
 <style>
@@ -22,41 +24,55 @@ body{
 }
 
 .wrapper{
-    width:720px;
-    max-width:95%;
+    width:1100px;
+    max-width:96%;
     background:#344766;
     border-radius:26px;
-    padding:30px 30px 40px 30px;
+    padding:30px;
     box-shadow:0 20px 45px rgba(0,0,0,0.25);
     color:white;
 }
 
 .title{
     text-align:center;
-    font-size:32px;
+    font-size:34px;
     font-weight:800;
-    margin-bottom:5px;
 }
 
 .creator{
     text-align:center;
     color:#ff8fa3;
-    font-weight:700;
     margin-bottom:25px;
+    font-weight:700;
 }
 
+/* 좌우 분할 */
+.main{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+}
+
+/* 공통 */
+.card{
+    background:#2b3d59;
+    padding:20px;
+    border-radius:18px;
+}
+
+/* 검색 */
 .searchbox{
     display:flex;
-    margin-bottom:20px;
+    margin-bottom:15px;
     position:relative;
 }
 
 .searchbox input{
     flex:1;
-    height:46px;
+    height:44px;
     border:none;
     border-radius:12px 0 0 12px;
-    padding:0 12px;
+    padding-left:10px;
     font-size:16px;
 }
 
@@ -70,9 +86,10 @@ body{
     cursor:pointer;
 }
 
+/* 자동완성 */
 #suggest{
     position:absolute;
-    top:46px;
+    top:44px;
     width:100%;
     background:white;
     color:black;
@@ -80,19 +97,14 @@ body{
     display:none;
     z-index:10;
 }
-#suggest div{
-    padding:8px;
-    cursor:pointer;
-}
-#suggest div:hover{
-    background:#eee;
-}
+#suggest div{padding:8px;cursor:pointer;}
+#suggest div:hover{background:#eee;}
 
+/* 스탯 입력 */
 .stats{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:15px;
-    margin-top:15px;
+    gap:12px;
 }
 
 .stat label{
@@ -108,85 +120,65 @@ body{
     font-size:15px;
 }
 
+/* 버튼 */
 .calcbtn{
     width:100%;
-    height:50px;
-    margin-top:22px;
+    height:48px;
+    margin-top:18px;
     border:none;
     border-radius:14px;
     background:#4fc3ff;
-    font-size:18px;
+    font-size:17px;
     font-weight:bold;
     color:#00213f;
     cursor:pointer;
 }
 
-#sbox{
-    background:#f1f1f1;
-    color:black;
-    margin-top:22px;
-    padding:15px;
-    border-radius:14px;
-    display:none;
-}
-
+/* 결과표 */
 table{
     width:100%;
     background:white;
     color:black;
-    margin-top:20px;
+    margin-top:15px;
     border-radius:12px;
     overflow:hidden;
 }
+th{background:#5bb7e2;}
+th,td{padding:7px;text-align:center;}
 
-th{
-    background:#5bb7e2;
-}
-
-th,td{
-    padding:8px;
-    text-align:center;
-}
-
-/* ===== 성장 감정 박스 ===== */
-#growthBox{
-    margin-top:35px;
-    background:#1f2c44;
-    padding:20px;
-    border-radius:16px;
-}
-
-#growthBox input{
-    width:80px;
-    height:32px;
-    border-radius:8px;
-    border:none;
-    margin-left:5px;
-    padding-left:5px;
-}
-
-#growthResult{
+#sbox{
+    background:#f1f1f1;
+    color:black;
     margin-top:15px;
-    font-size:16px;
-    line-height:1.6;
+    padding:12px;
+    border-radius:12px;
+    display:none;
 }
 
-.highlight{
-    color:#4fc3ff;
-    font-weight:bold;
+/* 감정기 */
+.predict input{
+    width:100%;
+    height:38px;
+    border-radius:10px;
+    border:none;
+    padding-left:8px;
+    margin-bottom:8px;
 }
 
-.danger{
-    color:#ff6b6b;
-    font-weight:bold;
+.predictResult{
+    margin-top:15px;
+    background:#1f2f49;
+    padding:15px;
+    border-radius:14px;
+    line-height:1.7;
+    font-size:15px;
 }
 
-.good{
-    color:#4ade80;
-    font-weight:bold;
-}
+.good{color:#4cff9a;font-weight:bold;}
+.bad{color:#ff7676;font-weight:bold;}
 
 </style>
+
 </head>
 
 <body>
@@ -194,7 +186,15 @@ th,td{
 <div class="wrapper">
 
 <div class="title">⭐ 별과바다 부족 계산기 ⭐</div>
-<div class="creator">제작 : 라프땅</div>
+<div class="creator">제작 : 이로하</div>
+
+<div class="main">
+
+<!-- 좌측 : 포획 계산 -->
+
+<div class="card">
+
+<h3>📌 1레벨 포획 계산</h3>
 
 <div class="searchbox">
     <input type="text" id="name" placeholder="페트 이름 입력">
@@ -203,16 +203,16 @@ th,td{
 </div>
 
 <div class="stats">
-    <div class="stat"><label>HP</label><input id="hp" type="number"></div>
-    <div class="stat"><label>ATK</label><input id="atk" type="number"></div>
-    <div class="stat"><label>DEF</label><input id="def" type="number"></div>
-    <div class="stat"><label>AGI</label><input id="agi" type="number"></div>
+    <div class="stat"><label>내구력</label><input id="hp" type="number"></div>
+    <div class="stat"><label>공격력</label><input id="atk" type="number"></div>
+    <div class="stat"><label>방어력</label><input id="def" type="number"></div>
+    <div class="stat"><label>순발력</label><input id="agi" type="number"></div>
 </div>
 
-<button class="calcbtn" id="calculate">결과 계산하기</button>
+<button class="calcbtn" id="calculate">8등급 계산</button>
 
 <div id="sbox">
-    <table id="myPet"><tbody></tbody></table>
+<table id="myPet"><tbody></tbody></table>
 </div>
 
 <div id="result">
@@ -221,120 +221,45 @@ th,td{
 <tr>
 <th>순번</th>
 <th>등급</th>
-<th>HP</th>
-<th>ATK</th>
-<th>DEF</th>
-<th>AGI</th>
+<th>내구</th>
+<th>공격</th>
+<th>방어</th>
+<th>순발</th>
 </tr>
 </thead>
 <tbody></tbody>
 </table>
 </div>
 
-<!-- ===================== 성장 감정 추가 ===================== -->
+</div>
 
-<div id="growthBox">
+<!-- 우측 : 육성 감정기 -->
 
-<h3>📈 육성 감정 (정밀 예측)</h3>
+<div class="card predict">
 
-현재 레벨 :
-<input type="number" id="curLevel">
+<h3>🔍 육성 감정 (현재 스탯 기반)</h3>
 
-<button id="growthCheck" class="calcbtn" style="height:40px;margin-top:15px">
-8등급 판별 & 120예측
-</button>
+<label>현재 레벨</label> <input id="nowLevel" type="number" placeholder="예: 70">
 
-<div id="growthResult"></div>
+<label>현재 내구력</label> <input id="nowHp" type="number">
 
+<label>현재 공격력</label> <input id="nowAtk" type="number">
+
+<label>현재 방어력</label> <input id="nowDef" type="number">
+
+<label>현재 순발력</label> <input id="nowAgi" type="number">
+
+<button class="calcbtn" onclick="runPrediction()">8등급 가능성 분석</button>
+
+<div class="predictResult" id="predictResult">
+레벨과 현재 스탯을 입력하면  
+8등급 확률과 120레벨 예상치를 보여줍니다.
 </div>
 
 </div>
 
-<script>
-
-var pet=[];
-let btnName="";
-const result=[];
-
-function loadPetData(){
-    $.getJSON("pets.json?v="+new Date().getTime(),function(data){
-        pet=data;
-    });
-}
-
-$("#name").on("input",function(){
-    let val=$(this).val().toLowerCase();
-    if(!val){$("#suggest").hide();return;}
-    let list=pet.filter(p=>p.name.toLowerCase().includes(val)).slice(0,10);
-    let html="";
-    list.forEach(p=>html+="<div>"+p.name+"</div>");
-    $("#suggest").html(html).show();
-});
-
-$(document).on("click","#suggest div",function(){
-    $("#name").val($(this).text());
-    $("#suggest").hide();
-});
-
-$("#search").click(function(){
-    let found=pet.find(p=>p.name===$("#name").val());
-    if(!found){alert("페트를 찾을 수 없습니다");return;}
-    btnName="search";
-    $("#sbox").show();
-    setSRank(JSON.parse(JSON.stringify(found)));
-});
-
-$("#calculate").click(function(){
-    let found=pet.find(p=>p.name===$("#name").val());
-    if(!found){alert("페트를 찾을 수 없습니다");return;}
-    btnName="calculate";
-    setBase(found);
-});
-
-/* ===== 성장 감정 버튼 ===== */
-
-$("#growthCheck").click(function(){
-
-    let found=pet.find(p=>p.name===$("#name").val());
-    if(!found){ alert("페트를 먼저 검색하세요"); return; }
-
-    let level=parseInt($("#curLevel").val());
-    if(!level || level<2){ alert("레벨은 2 이상 입력하세요"); return; }
-
-    let nowStat={
-        hp:parseFloat($("#hp").val()),
-        atk:parseFloat($("#atk").val()),
-        def:parseFloat($("#def").val()),
-        agi:parseFloat($("#agi").val())
-    };
-
-    let res=estimateRankConfidence(found,level,nowStat);
-
-    /* 120예측 */
-    let predictedHP  = (nowStat.hp  + (120-level)*(nowStat.hp/level)).toFixed(1);
-    let predictedATK = (nowStat.atk + (120-level)*(nowStat.atk/level)).toFixed(1);
-    let predictedDEF = (nowStat.def + (120-level)*(nowStat.def/level)).toFixed(1);
-    let predictedAGI = (nowStat.agi + (120-level)*(nowStat.agi/level)).toFixed(1);
-
-    let colorClass="highlight";
-    if(res.confidence>80) colorClass="good";
-    if(res.confidence<40) colorClass="danger";
-
-    $("#growthResult").html(
-        "추정 B값 : <span class='highlight'>"+res.avgB+"</span><br>"+
-        "8등급 확신도 : <span class='"+colorClass+"'>"+res.confidence+"%</span><br><br>"+
-        "<b>📊 120레벨 예상 스탯</b><br>"+
-        "HP : "+predictedHP+"<br>"+
-        "ATK : "+predictedATK+"<br>"+
-        "DEF : "+predictedDEF+"<br>"+
-        "AGI : "+predictedAGI
-    );
-
-});
-
-loadPetData();
-
-</script>
+</div>
+</div>
 
 </body>
 </html>
