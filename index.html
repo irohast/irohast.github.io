@@ -1,18 +1,14 @@
 <!DOCTYPE html>
-
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>별과바다 부족 펫 계산기</title>
+<title>별과바다 부족 계산기</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-<script src="pet.js"></script>
+<script src="pet.js?v=7"></script>
 
 <style>
-
 body{
     margin:0;
     min-height:100vh;
@@ -24,8 +20,8 @@ body{
 }
 
 .wrapper{
-    width:1100px;
-    max-width:96%;
+    width:1200px;
+    max-width:95%;
     background:#344766;
     border-radius:26px;
     padding:30px;
@@ -35,231 +31,146 @@ body{
 
 .title{
     text-align:center;
-    font-size:34px;
+    font-size:32px;
     font-weight:800;
 }
 
 .creator{
     text-align:center;
     color:#ff8fa3;
-    margin-bottom:25px;
     font-weight:700;
+    margin-bottom:25px;
 }
 
-/* 좌우 분할 */
-.main{
+.columns{
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:30px;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:20px;
 }
 
-/* 공통 */
 .card{
-    background:#2b3d59;
-    padding:20px;
+    background:#2a3b55;
     border-radius:18px;
+    padding:20px;
 }
 
-/* 검색 */
-.searchbox{
-    display:flex;
-    margin-bottom:15px;
-    position:relative;
-}
-
-.searchbox input{
-    flex:1;
-    height:44px;
-    border:none;
-    border-radius:12px 0 0 12px;
-    padding-left:10px;
-    font-size:16px;
-}
-
-.searchbox button{
-    width:90px;
-    border:none;
-    background:#55b6e6;
-    color:#00314d;
-    font-weight:bold;
-    border-radius:0 12px 12px 0;
-    cursor:pointer;
-}
-
-/* 자동완성 */
-#suggest{
-    position:absolute;
-    top:44px;
-    width:100%;
-    background:white;
-    color:black;
-    border-radius:0 0 12px 12px;
-    display:none;
-    z-index:10;
-}
-#suggest div{padding:8px;cursor:pointer;}
-#suggest div:hover{background:#eee;}
-
-/* 스탯 입력 */
-.stats{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-}
-
-.stat label{
-    font-size:14px;
-}
-
-.stat input{
+input{
     width:100%;
     height:40px;
     border-radius:10px;
     border:none;
     padding-left:10px;
+    margin-top:6px;
+    margin-bottom:10px;
     font-size:15px;
 }
 
-/* 버튼 */
-.calcbtn{
+button{
     width:100%;
-    height:48px;
-    margin-top:18px;
+    height:46px;
     border:none;
-    border-radius:14px;
+    border-radius:12px;
     background:#4fc3ff;
-    font-size:17px;
     font-weight:bold;
-    color:#00213f;
     cursor:pointer;
+    margin-top:10px;
 }
 
-/* 결과표 */
-table{
-    width:100%;
+#suggest{
     background:white;
     color:black;
-    margin-top:15px;
-    border-radius:12px;
-    overflow:hidden;
-}
-th{background:#5bb7e2;}
-th,td{padding:7px;text-align:center;}
-
-#sbox{
-    background:#f1f1f1;
-    color:black;
-    margin-top:15px;
-    padding:12px;
-    border-radius:12px;
+    position:absolute;
+    z-index:50;
+    width:90%;
     display:none;
+    border-radius:8px;
 }
+#suggest div{ padding:6px; cursor:pointer;}
+#suggest div:hover{ background:#eee;}
 
-/* 감정기 */
-.predict input{
-    width:100%;
-    height:38px;
-    border-radius:10px;
-    border:none;
-    padding-left:8px;
-    margin-bottom:8px;
-}
-
-.predictResult{
-    margin-top:15px;
-    background:#1f2f49;
+.resultbox{
+    background:#1e2c44;
     padding:15px;
-    border-radius:14px;
-    line-height:1.7;
-    font-size:15px;
+    border-radius:12px;
+    margin-top:15px;
+    white-space:pre-line;
 }
 
-.good{color:#4cff9a;font-weight:bold;}
-.bad{color:#ff7676;font-weight:bold;}
-
+canvas{
+    background:white;
+    border-radius:12px;
+    margin-top:10px;
+}
 </style>
-
 </head>
 
 <body>
-
 <div class="wrapper">
 
 <div class="title">⭐ 별과바다 부족 계산기 ⭐</div>
-<div class="creator">제작 : 이로하</div>
+<div class="creator">제작 : 라프땅</div>
 
-<div class="main">
+<div class="columns">
 
-<!-- 좌측 : 포획 계산 -->
-
+<!-- 왼쪽 : 기존 계산 -->
 <div class="card">
-
 <h3>📌 1레벨 포획 계산</h3>
 
-<div class="searchbox">
-    <input type="text" id="name" placeholder="페트 이름 입력">
-    <button id="search">검색</button>
-    <div id="suggest"></div>
+<div style="position:relative">
+<input type="text" id="name" placeholder="페트 이름 입력">
+<div id="suggest"></div>
 </div>
 
-<div class="stats">
-    <div class="stat"><label>내구력</label><input id="hp" type="number"></div>
-    <div class="stat"><label>공격력</label><input id="atk" type="number"></div>
-    <div class="stat"><label>방어력</label><input id="def" type="number"></div>
-    <div class="stat"><label>순발력</label><input id="agi" type="number"></div>
+<label>내구력</label>
+<input id="hp" type="number">
+
+<label>공격력</label>
+<input id="atk" type="number">
+
+<label>방어력</label>
+<input id="def" type="number">
+
+<label>순발력</label>
+<input id="agi" type="number">
+
+<button id="calculate">8등급 계산</button>
+
+<div id="leftResult" class="resultbox"></div>
 </div>
 
-<button class="calcbtn" id="calculate">8등급 계산</button>
+<!-- 가운데 : 성장 분석 -->
+<div class="card">
+<h3>🔎 육성 감정 (현재 스탯)</h3>
 
-<div id="sbox">
-<table id="myPet"><tbody></tbody></table>
+<label>현재 레벨</label>
+<input id="curLevel" type="number">
+
+<label>현재 내구력</label>
+<input id="curHp" type="number">
+
+<label>현재 공격력</label>
+<input id="curAtk" type="number">
+
+<label>현재 방어력</label>
+<input id="curDef" type="number">
+
+<label>현재 순발력</label>
+<input id="curAgi" type="number">
+
+<button id="analyze">8등급 가능성 분석</button>
+
+<div id="analysisResult" class="resultbox"></div>
 </div>
 
-<div id="result">
-<table>
-<thead>
-<tr>
-<th>순번</th>
-<th>등급</th>
-<th>내구</th>
-<th>공격</th>
-<th>방어</th>
-<th>순발</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-</div>
-
-</div>
-
-<!-- 우측 : 육성 감정기 -->
-
-<div class="card predict">
-
-<h3>🔍 육성 감정 (현재 스탯 기반)</h3>
-
-<label>현재 레벨</label> <input id="nowLevel" type="number" placeholder="예: 70">
-
-<label>현재 내구력</label> <input id="nowHp" type="number">
-
-<label>현재 공격력</label> <input id="nowAtk" type="number">
-
-<label>현재 방어력</label> <input id="nowDef" type="number">
-
-<label>현재 순발력</label> <input id="nowAgi" type="number">
-
-<button class="calcbtn" onclick="runPrediction()">8등급 가능성 분석</button>
-
-<div class="predictResult" id="predictResult">
-레벨과 현재 스탯을 입력하면  
-8등급 확률과 120레벨 예상치를 보여줍니다.
-</div>
-
+<!-- 오른쪽 : 그래프 -->
+<div class="card">
+<h3>📈 성장 예측 그래프</h3>
+<canvas id="statChart" width="350" height="350"></canvas>
 </div>
 
 </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
