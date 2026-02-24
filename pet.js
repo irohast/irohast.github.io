@@ -147,3 +147,59 @@ function limitDecimalPlaces(number, places) {
 function preciseRound(num) {
     return Math.round(num * 1e12) / 1e12;
 }
+function runPrediction(){
+
+```
+const found=pet.find(p=>p.name===$("#name").val());
+if(!found){
+    alert("먼저 페트를 검색하세요");
+    return;
+}
+
+const level=parseInt($("#nowLevel").val());
+
+const nowStat={
+    hp:parseFloat($("#nowHp").val()),
+    atk:parseFloat($("#nowAtk").val()),
+    def:parseFloat($("#nowDef").val()),
+    agi:parseFloat($("#nowAgi").val())
+};
+
+if(!level||!nowStat.hp){
+    alert("레벨과 현재 스탯을 입력해주세요");
+    return;
+}
+
+const data=estimateRankConfidence(found,level,nowStat);
+
+// 120레벨 예측
+const remain=120-level;
+
+const pred={
+    hp:(nowStat.hp+(found.hp*remain/8)).toFixed(1),
+    atk:(nowStat.atk+(found.atk*remain/8)).toFixed(1),
+    def:(nowStat.def+(found.def*remain/8)).toFixed(1),
+    agi:(nowStat.agi+(found.agi*remain/8)).toFixed(1)
+};
+
+let gradeText;
+
+if(data.confidence>=80) gradeText="<span class='good'>8등급 거의 확정</span>";
+else if(data.confidence>=55) gradeText="<span class='good'>8등급 각 보임 (키울 가치 있음)</span>";
+else if(data.confidence>=30) gradeText="애매 (취향 영역)";
+else gradeText="<span class='bad'>비추천 개체</span>";
+
+$("#predictResult").html(`
+추정 B값 : <b>${data.avgB}</b><br>
+8등급 확신도 : <b>${data.confidence}%</b><br>
+판정 : ${gradeText}
+<hr>
+<b>📈 120레벨 예상 스탯</b><br>
+내구 : ${pred.hp}<br>
+공격 : ${pred.atk}<br>
+방어 : ${pred.def}<br>
+순발 : ${pred.agi}
+`);
+```
+
+}
