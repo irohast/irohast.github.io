@@ -1,178 +1,191 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⭐ 별과바다 부족 계산기 ⭐</title>
+<meta charset="utf-8">
+<title>⭐별과바다 계산기⭐</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="./pet.js" defer></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 <style>
+/* ===== 배경 ===== */
 body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:#eef3fb;
+    background: linear-gradient(180deg,#dff4ff,#eefaff,#f7fdff);
+    min-height:100vh;
+    font-family:'Malgun Gothic',sans-serif;
 }
 
-header{
-    background:linear-gradient(180deg,#7faee8,#93bdf0);
-    text-align:center;
-    padding:22px 10px;
-}
-header h1{margin:0;font-size:24px;}
-header .sub{font-size:13px;margin-top:6px;}
-
-.wrapper{
-    max-width:720px;
-    margin:35px auto;
-    padding:0 20px;
+/* 중앙 카드 */
+.main-wrapper{
+    max-width:1000px;
+    margin:30px auto;
 }
 
+/* 카드 스타일 */
 .card{
     background:white;
-    border-radius:14px;
-    padding:18px;
-    box-shadow:0 6px 16px rgba(0,0,0,0.08);
+    border-radius:18px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.08);
+    padding:20px;
+    margin-bottom:20px;
 }
 
-h2{
-    margin-top:0;
-    font-size:17px;
+/* 제목 */
+.site-title{
+    text-align:center;
+    margin-bottom:10px;
 }
-
-label{
-    font-size:13px;
+.site-title h2{
+    font-weight:700;
+    margin-bottom:0;
+}
+.site-title small{
+    color:#4aa3d9;
     font-weight:bold;
-    margin-top:12px;
-    display:block;
 }
 
-.input-row{
-    display:flex;
-    align-items:center;
-    gap:6px;
-}
-
-input{
-    flex:1;
-    padding:8px 10px;
-    border-radius:8px;
-    border:1px solid #cfd7e6;
-}
-
-button{
-    padding:8px 10px;
+/* 버튼 */
+.btn-primary{
+    background:#4fc3f7;
     border:none;
-    border-radius:8px;
-    background:#4a86e8;
-    color:white;
-    cursor:pointer;
+}
+.btn-primary:hover{
+    background:#29b6f6;
 }
 
-button.small{
-    width:30px;
-    padding:6px;
-}
-
+/* 추천 리스트 */
 #pet-suggestions{
     list-style:none;
-    margin:0;
     padding:0;
-    max-height:220px;
-    overflow-y:auto;
-    border:1px solid #ccd6e5;
-    border-radius:8px;
+    margin:0;
     background:white;
-    position:absolute;
-    width:100%;
-    z-index:999;
+    border-radius:10px;
+    box-shadow:0 6px 15px rgba(0,0,0,0.15);
+    overflow:hidden;
 }
-
 #pet-suggestions li{
-    padding:6px 8px;
+    padding:10px;
     cursor:pointer;
 }
 #pet-suggestions li:hover{
-    background:#e6f0ff;
+    background:#e3f6ff;
 }
 
-.suggest-wrap{
-    position:relative;
+/* 결과 테이블 */
+.table>tbody>tr>td{
+    vertical-align:middle !important;
 }
 
-#myPet{
-    margin-top:15px;
-}
-
-table{
-    width:100%;
-    font-size:13px;
-    border-collapse:collapse;
-}
-td,th{
-    padding:6px;
-    border-bottom:1px solid #e6edf5;
+#btnTop{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    display:none;
+    border:none;
+    background:#4fc3f7;
+    color:white;
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    font-size:20px;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-<h1>⭐ 별과바다 부족 계산기 ⭐</h1>
-<div style="color:#c53030;font-weight:bold;">제작자 : 라프땅</div>
-<div class="sub">최종 수정일 : 26년 02월 25일</div>
-</header>
+<div class="main-wrapper">
 
-<div class="wrapper">
+<div class="site-title">
+    <h2>Happy Pet Calculator</h2>
+    <small>⭐별과바다 부족⭐</small>
+</div>
+
 <div class="card">
 
-<h2>초기치 8등급 확률 계산</h2>
-
+<div class="form-group">
 <label>페트 이름</label>
-<div class="suggest-wrap input-row">
-<button id="dropdownBtn" class="small">▼</button>
-<input id="name" autocomplete="off">
-<button id="searchBtn" class="small">🔍</button>
+<div class="input-group">
+<input type="text" class="form-control" id="name" placeholder="페트 이름 입력" autocomplete="off">
+<span class="input-group-btn">
+<button class="btn btn-primary" id="search">검색</button>
+</span>
+</div>
+<div id="pet-suggestions-box" style="position:relative;">
 <ul id="pet-suggestions"></ul>
 </div>
-
-<label>내구력</label>
-<div class="input-row">
-<button class="small" onclick="changeStat('hp',-1)">-</button>
-<input id="hp" type="number">
-<button class="small" onclick="changeStat('hp',1)">+</button>
 </div>
 
-<label>공격력</label>
-<div class="input-row">
-<button class="small" onclick="changeStat('atk',-1)">-</button>
-<input id="atk" type="number">
-<button class="small" onclick="changeStat('atk',1)">+</button>
+<div class="row">
+<div class="col-xs-6">
+<label>내구력 (HP)</label>
+<input type="number" id="hp" class="form-control">
 </div>
 
-<label>방어력</label>
-<div class="input-row">
-<button class="small" onclick="changeStat('def',-1)">-</button>
-<input id="def" type="number">
-<button class="small" onclick="changeStat('def',1)">+</button>
+<div class="col-xs-6">
+<label>공격력 (ATK)</label>
+<input type="number" id="atk" class="form-control">
 </div>
 
-<label>순발력</label>
-<div class="input-row">
-<button class="small" onclick="changeStat('agi',-1)">-</button>
-<input id="agi" type="number">
-<button class="small" onclick="changeStat('agi',1)">+</button>
+<div class="col-xs-6">
+<label>방어력 (DEF)</label>
+<input type="number" id="def" class="form-control">
 </div>
 
-<button id="calculateBtn" style="margin-top:14px;width:100%;">계산하기</button>
-
-<div id="myPet"></div>
-<div id="resultArea"></div>
-
+<div class="col-xs-6">
+<label>순발력 (AGI)</label>
+<input type="number" id="agi" class="form-control">
 </div>
 </div>
+
+<br>
+<button id="calculate" class="btn btn-primary btn-block btn-lg">
+결과 계산하기
+</button>
+
+</div>
+
+<div class="card" id="myPet" style="display:none;">
+<table class="table table-bordered">
+<thead>
+<tr>
+<th>구분</th>
+<th>HP</th>
+<th>ATK</th>
+<th>DEF</th>
+<th>AGI</th>
+<th>합</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+
+<div class="card" id="result-master-container" style="display:none;">
+<div id="result" class="table-responsive">
+<table class="table table-striped">
+<thead>
+<tr>
+<th>번호</th>
+<th>등급</th>
+<th>내구</th>
+<th>공격</th>
+<th>방어</th>
+<th>순발</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<button id="btnTop">▲</button>
+
+<script src="pet.js"></script>
 
 </body>
 </html>
