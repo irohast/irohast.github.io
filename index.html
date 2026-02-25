@@ -3,7 +3,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>별과바다 계산기</title>
+<title>별과바다 부족 - 펫 계산기</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -14,6 +14,10 @@
 body{
     background:linear-gradient(180deg,#dff4ff,#eefaff,#f7fdff);
     font-family:'Malgun Gothic';
+}
+
+.container{
+    max-width:900px;
 }
 
 .title{
@@ -138,6 +142,8 @@ body{
 
 </div>
 
+<!-- S초기치 / S성장률 표 -->
+
 <div class="card" id="myPet" style="display:none;">
 <table class="table table-bordered">
 <thead>
@@ -150,9 +156,30 @@ body{
 <th>합</th>
 </tr>
 </thead>
-<tbody></tbody>
+
+<tbody>
+<tr class="srank">
+<td id="srank-label">S 초기치</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="srank">
+<td>S 성장률</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+
 </table>
 </div>
+
+<!-- 분포표 -->
 
 <div class="card" id="result-master-container" style="display:none;">
 <div id="result-wrapper">
@@ -187,7 +214,6 @@ function loadPetData() {
         });
 }
 
-/* 자동완성 */
 function showSuggestions(inputVal) {
     inputVal = inputVal.toLowerCase();
     let matches = inputVal ? pet.filter(p => p.name.toLowerCase().includes(inputVal)) : [];
@@ -201,7 +227,6 @@ function showSuggestions(inputVal) {
     matches.length ? $ul.show() : $ul.hide();
 }
 
-/* 전체목록 버튼 */
 function showAllPets(){
     let $ul = $('#pet-suggestions');
     $ul.empty();
@@ -223,14 +248,12 @@ $(document).ready(function() {
         showAllPets();
     });
 
-    /* 펫 선택 */
     $(document).on("mousedown", "#pet-suggestions li", function(){
         $("#name").val($(this).text());
-        $("#pet-suggestions").hide();   // ← 선택하면 목록 닫힘
+        $("#pet-suggestions").hide();
         $("#search").click();
     });
 
-    /* 바깥 클릭시 닫힘 */
     $(document).click(function(e){
         if(!$(e.target).closest('#name, #pet-suggestions, #showAll').length){
             $('#pet-suggestions').hide();
