@@ -4,165 +4,240 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⭐별과바다 부족 계산기⭐</title>
+<title>⭐ 별과바다 부족 계산기 ⭐</title>
 
-<!-- jQuery (오픈소스 호환 유지 핵심) -->
+<!-- jquery (오픈소스 방식 유지) -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-<!-- Chart -->
+<!-- bootstrap (원본 호환용) -->
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+<!-- pet.js 반드시 index 아래 경로 -->
+
+<script src="./pet.js"></script>
 
 <style>
+
 body{
     margin:0;
-    background:#edf3ff;
-    font-family:Arial, Helvetica, sans-serif;
-}
-.wrapper{
-    max-width:1400px;
-    margin:40px auto;
-    padding:15px;
-}
-header{
-    text-align:center;
-    margin-bottom:25px;
-}
-header h2{margin:0;}
-.creator{
-    color:#b04a63;
-    font-weight:bold;
-}
-.sub{
-    font-size:13px;
-    color:#666;
+    background:#eaf2fb;
+    font-family: "Pretendard", Arial, sans-serif;
 }
 
-.layout{
+/* 상단 */
+header{
+    background: linear-gradient(180deg,#7db4ff,#9dc7ff);
+    text-align:center;
+    padding:18px 10px 22px 10px;
+    color:#222;
+}
+header h2{
+    margin:0;
+    font-weight:800;
+}
+header .sub{
+    font-size:13px;
+    margin-top:6px;
+}
+
+/* 전체 여백 */
+.container-main{
+    max-width:1200px;
+    margin:25px auto;
+    padding:0 25px;
+}
+
+/* 3컬럼 */
+.grid{
     display:grid;
-    grid-template-columns: 1fr 1fr 1.4fr;
+    grid-template-columns: 1fr 1fr 1.3fr;
     gap:20px;
 }
 
+/* 카드 */
 .card{
     background:white;
     border-radius:16px;
     padding:18px;
-    box-shadow:0 5px 18px rgba(0,0,0,.08);
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
 }
 
-label{
-    font-size:14px;
-    font-weight:bold;
+/* 제목 */
+.card h3{
+    margin-top:0;
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:14px;
 }
 
-input,select{
+/* 입력 */
+input{
     width:100%;
-    padding:9px;
-    border-radius:8px;
-    border:1px solid #ccd6e6;
-    margin:5px 0 12px 0;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    border:none;
+    padding:10px;
     border-radius:10px;
-    background:#4a87f5;
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.small{
-    font-size:13px;
-    color:#444;
-}
-
-.tabs{
-    display:flex;
-    gap:6px;
+    border:1px solid #cfd7e6;
     margin-bottom:10px;
 }
-.tabs button{
-    background:#cfdaf3;
-    color:#333;
-}
-.tabs button.active{
-    background:#4a87f5;
+
+/* 버튼 */
+.btn-main{
+    width:100%;
+    background:#4a86e8;
     color:white;
-}
-canvas{
-    background:white;
+    border:none;
+    padding:12px;
     border-radius:12px;
-    padding:10px;
+    font-weight:700;
+    margin-top:8px;
 }
+.btn-main:hover{ background:#3a73ce; }
+
+/* 자동완성 */
+#pet-suggestions-box{
+    position:relative;
+}
+#pet-suggestions{
+    list-style:none;
+    padding:0;
+    margin:0;
+    max-height:260px;
+    overflow-y:auto;
+    background:white;
+    border-radius:10px;
+    border:1px solid #cfd7e6;
+}
+#pet-suggestions li{
+    padding:8px 10px;
+    cursor:pointer;
+}
+#pet-suggestions li:hover{
+    background:#e8f0ff;
+}
+
+/* 결과테이블 */
+#myPet table{
+    width:100%;
+    font-size:13px;
+}
+#myPet td{
+    padding:4px 6px;
+}
+
+/* 그래프 영역 */
+#graphArea{
+    height:520px;
+}
+
 </style>
 
 </head>
 
 <body>
-<div class="wrapper">
 
 <header>
-<h2>⭐ 별과바다 부족 계산기 ⭐</h2>
-<div class="creator">제작자 : 라프땅</div>
-<div class="sub">최종 수정일 : 2026년 02월 25일</div>
+    <h2>⭐ 별과바다 부족 계산기 ⭐</h2>
+    <div style="color:#d93025;font-weight:700">제작자 : 라프땅</div>
+    <div class="sub">최종 수정일 : 26년 02월 25일</div>
 </header>
 
-<div class="layout">
+<div class="container-main">
+<div class="grid">
 
-<!-- 좌측 : 오픈소스 초기치 계산 -->
+<!-- 좌측 : 오픈소스 계산기 -->
 
 <div class="card">
-<label>페트 이름</label>
-<input id="name" autocomplete="off">
-<div id="sresult" class="small"></div>
+<h3>초기치 8등급 확률</h3>
 
-<label>1레벨 능력치</label> <input id="hp" placeholder="HP"> <input id="atk" placeholder="ATK"> <input id="def" placeholder="DEF"> <input id="agi" placeholder="AGI">
-
-<button id="search">S초기치 계산</button>
-
-<div id="leftResult" class="small"></div>
+<div class="stat-label">페트 이름</div>
+<div style="position:relative;">
+    <input type="text" id="name" placeholder="페트 이름 입력" autocomplete="off">
+    <div id="pet-suggestions-box">
+        <ul id="pet-suggestions"></ul>
+    </div>
 </div>
 
-<!-- 가운데 : 성장 분석 -->
+<div class="stat-label">내구력</div>
+<input type="number" id="hp">
+
+<div class="stat-label">공격력</div>
+<input type="number" id="atk">
+
+<div class="stat-label">방어력</div>
+<input type="number" id="def">
+
+<div class="stat-label">순발력</div>
+<input type="number" id="agi">
+
+<button class="btn-main" id="calculate">8등급 확률 계산</button>
+
+<div id="myPet" style="margin-top:15px;display:none;">
+<table class="table table-condensed">
+<tbody></tbody>
+</table>
+</div>
+
+<div id="result-master-container" style="display:none;margin-top:15px;">
+<div id="result" class="table-responsive">
+<table class="table table-striped table-condensed">
+<thead>
+<tr>
+<th>순번</th>
+<th>등급</th>
+<th>내구력</th>
+<th>공격력</th>
+<th>방어력</th>
+<th>순발력</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<!-- 가운데 : 성장 분석 입력 -->
 
 <div class="card">
-<label>현재 레벨</label>
-<input id="level" placeholder="예: 35">
+<h3>성장 분석</h3>
 
-<label>현재 능력치</label> <input id="chp" placeholder="현재 HP"> <input id="catk" placeholder="현재 ATK"> <input id="cdef" placeholder="현재 DEF"> <input id="cagi" placeholder="현재 AGI">
+<div>현재 레벨</div>
+<input id="curLv" type="number" placeholder="예: 35">
 
-<button id="analyze">120레벨 성장 분석</button>
+<div>현재 내구력</div>
+<input id="curHp" type="number">
 
-<div id="analysisResult" class="small"></div>
+<div>현재 공격력</div>
+<input id="curAtk" type="number">
+
+<div>현재 방어력</div>
+<input id="curDef" type="number">
+
+<div>현재 순발력</div>
+<input id="curAgi" type="number">
+
+<button class="btn-main" id="growthCheck">120레벨 성장 분석</button>
+
+<div id="growthResult" style="margin-top:14px;font-weight:700;"></div>
+
 </div>
 
 <!-- 우측 : 그래프 -->
 
 <div class="card">
-
-<div class="tabs">
-<button class="active" data-type="hp">내구</button>
-<button data-type="atk">공격</button>
-<button data-type="def">방어</button>
-<button data-type="agi">순발</button>
-<button data-type="sum">총성장</button>
-</div>
-
-<canvas id="growthChart" height="170"></canvas>
-
+<h3>성장 그래프</h3>
+<canvas id="graphArea"></canvas>
 </div>
 
 </div>
 </div>
 
-<script defer src="./pet.js"></script>
+<!-- Chart.js -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </body>
 </html>
