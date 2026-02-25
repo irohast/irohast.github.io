@@ -57,22 +57,16 @@ body{
 #pet-suggestions{
     list-style:none;
     padding:0;
-    margin:5px 0 0;
-    max-height:160px;
-    overflow-y:auto;
+    margin-top:5px;
     border:1px solid #ddd;
-    display:none;
-    background:#fff;
-    position:absolute;
-    width:92%;
-    z-index:999;
+    border-radius:8px;
 }
 #pet-suggestions li{
-    padding:6px 10px;
-    cursor:pointer;
+    padding:8px;
 }
 #pet-suggestions li:hover{
-    background:#eaf6ff;
+    background:#e9f7ff;
+    cursor:pointer;
 }
 </style>
 </head>
@@ -162,7 +156,58 @@ body{
 
 </div>
 
+<script>
+var pet = [];
+let btnName = "";
+const result = [];
+
+function loadPetData() {
+    return $.getJSON('./pets.json?v=' + new Date().getTime())
+        .done(function(data) { pet = data; })
+        .fail(function() { alert("pets.json 로드 실패"); });
+}
+
+function showSuggestions(inputVal) {
+    inputVal = inputVal.toLowerCase();
+    let matches = inputVal ? pet.filter(p => (p.name+"").toLowerCase().includes(inputVal)) : [];
+    let $ul = $('#pet-suggestions');
+    $ul.empty();
+
+    matches.slice(0,10).forEach(p => {
+        $ul.append('<li>'+p.name+'</li>');
+    });
+}
+
+$(document).ready(function() {
+
+    loadPetData();
+
+    $("#name").on("input", function(){
+        showSuggestions($(this).val());
+    });
+
+    $(document).on("mousedown", "#pet-suggestions li", function(){
+        $("#name").val($(this).text());
+        $("#search").click();
+    });
+
+    $("#search, #calculate").on("click", function() {
+        if (pet.length === 0) return;
+
+        const foundPet = pet.find(p => p.name === $("#name").val());
+        if (!foundPet) { alert("페트 정보를 찾을 수 없습니다."); return; }
+
+        $("#result-master-container").show();
+        btnName = this.id;
+        $("#myPet").show();
+
+        const copiedPet = JSON.parse(JSON.stringify(foundPet));
+        setSRank(copiedPet);
+        setBase(foundPet);
+    });
+});
+</script>
+
 <script src="pet.js"></script>
-<script src="ui.js"></script>
 </body>
 </html>
