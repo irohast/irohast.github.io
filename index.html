@@ -1,128 +1,168 @@
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>⭐ 별과바다 부족 계산기 ⭐</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⭐별과바다 부족 계산기⭐</title>
+
+<!-- jQuery (오픈소스 호환 유지 핵심) -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- Chart -->
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
 
 <style>
-body{background:#eef2f6;font-family:"맑은 고딕",sans-serif;}
-.wrapper{max-width:1150px;margin:30px auto;padding:25px;background:#fff;border-radius:14px;box-shadow:0 8px 25px rgba(0,0,0,.08);} 
-h2{margin-top:5px;font-weight:700}
-.sub{color:#c0392b;font-weight:700}
-.section{margin-top:18px;padding:18px;border-radius:12px;background:#f7f9fc}
-label{font-weight:600;margin-top:6px}
-input{height:40px!important}
-.btn-main{margin-top:12px;height:44px;font-weight:700}
-#myPet{margin-top:15px}
-.graph-area{margin-top:25px}
-.graph-card{background:#fff;border-radius:12px;padding:15px;margin-top:18px;box-shadow:0 4px 14px rgba(0,0,0,.07)}
-canvas{max-height:340px}
-.legend-box{margin-top:10px;font-size:13px}
-.footer{text-align:center;margin-top:18px;color:#666;font-size:12px}
+body{
+    margin:0;
+    background:#edf3ff;
+    font-family:Arial, Helvetica, sans-serif;
+}
+.wrapper{
+    max-width:1400px;
+    margin:40px auto;
+    padding:15px;
+}
+header{
+    text-align:center;
+    margin-bottom:25px;
+}
+header h2{margin:0;}
+.creator{
+    color:#b04a63;
+    font-weight:bold;
+}
+.sub{
+    font-size:13px;
+    color:#666;
+}
+
+.layout{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1.4fr;
+    gap:20px;
+}
+
+.card{
+    background:white;
+    border-radius:16px;
+    padding:18px;
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+}
+
+label{
+    font-size:14px;
+    font-weight:bold;
+}
+
+input,select{
+    width:100%;
+    padding:9px;
+    border-radius:8px;
+    border:1px solid #ccd6e6;
+    margin:5px 0 12px 0;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#4a87f5;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.small{
+    font-size:13px;
+    color:#444;
+}
+
+.tabs{
+    display:flex;
+    gap:6px;
+    margin-bottom:10px;
+}
+.tabs button{
+    background:#cfdaf3;
+    color:#333;
+}
+.tabs button.active{
+    background:#4a87f5;
+    color:white;
+}
+canvas{
+    background:white;
+    border-radius:12px;
+    padding:10px;
+}
 </style>
+
 </head>
 
 <body>
 <div class="wrapper">
 
-<div class="text-center">
+<header>
 <h2>⭐ 별과바다 부족 계산기 ⭐</h2>
-<div class="sub">제작자 : 라프땅</div>
-<div>최종 수정일 : 26년 02월 25일</div>
-</div>
+<div class="creator">제작자 : 라프땅</div>
+<div class="sub">최종 수정일 : 2026년 02월 25일</div>
+</header>
 
-<div class="section">
-<div class="row">
-<div class="col-md-6">
+<div class="layout">
+
+<!-- 좌측 : 오픈소스 초기치 계산 -->
+
+<div class="card">
 <label>페트 이름</label>
-<div class="input-group">
-<input id="name" class="form-control" placeholder="이름 입력">
-<span class="input-group-btn">
-<button id="search" class="btn btn-primary">검색</button>
-</span>
+<input id="name" autocomplete="off">
+<div id="sresult" class="small"></div>
+
+<label>1레벨 능력치</label> <input id="hp" placeholder="HP"> <input id="atk" placeholder="ATK"> <input id="def" placeholder="DEF"> <input id="agi" placeholder="AGI">
+
+<button id="search">S초기치 계산</button>
+
+<div id="leftResult" class="small"></div>
 </div>
 
-<label>HP</label>
-<input id="hp" type="number" class="form-control">
+<!-- 가운데 : 성장 분석 -->
 
-<label>공격</label>
-<input id="atk" type="number" class="form-control">
+<div class="card">
+<label>현재 레벨</label>
+<input id="level" placeholder="예: 35">
 
-<label>방어</label>
-<input id="def" type="number" class="form-control">
+<label>현재 능력치</label> <input id="chp" placeholder="현재 HP"> <input id="catk" placeholder="현재 ATK"> <input id="cdef" placeholder="현재 DEF"> <input id="cagi" placeholder="현재 AGI">
 
-<label>순발</label>
-<input id="agi" type="number" class="form-control">
+<button id="analyze">120레벨 성장 분석</button>
 
-<button id="calculate" class="btn btn-primary btn-block btn-main">8등급 확률 계산</button>
+<div id="analysisResult" class="small"></div>
 </div>
 
-<div class="col-md-6">
-<table class="table table-bordered" id="myPet" style="display:none">
-<tbody></tbody>
-</table>
-</div>
-</div>
+<!-- 우측 : 그래프 -->
+
+<div class="card">
+
+<div class="tabs">
+<button class="active" data-type="hp">내구</button>
+<button data-type="atk">공격</button>
+<button data-type="def">방어</button>
+<button data-type="agi">순발</button>
+<button data-type="sum">총성장</button>
 </div>
 
-<div id="result-master-container" style="display:none">
-<div class="section">
-<div class="table-responsive" id="result">
-<table class="table table-striped table-condensed">
-<thead>
-<tr>
-<th>순번</th>
-<th>등급</th>
-<th>내구</th>
-<th>공격</th>
-<th>방어</th>
-<th>순발</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-</div>
-</div>
-</div>
-
-<div class="graph-area">
-<div class="graph-card">
-<h4>내구 성장률</h4>
-<canvas id="chart-hp"></canvas>
-</div>
-
-<div class="graph-card">
-<h4>공격 성장률</h4>
-<canvas id="chart-atk"></canvas>
-</div>
-
-<div class="graph-card">
-<h4>방어 성장률</h4>
-<canvas id="chart-def"></canvas>
-</div>
-
-<div class="graph-card">
-<h4>순발 성장률</h4>
-<canvas id="chart-agi"></canvas>
-</div>
-
-<div class="graph-card">
-<h4>총 성장률 (내구 제외)</h4>
-<canvas id="chart-total"></canvas>
-<div class="legend-box">휠로 확대/축소 가능</div>
-</div>
-</div>
-
-<div class="footer">GitHub Pages 호환</div>
+<canvas id="growthChart" height="170"></canvas>
 
 </div>
 
-<script src="./pet.js"></script>
+</div>
+</div>
+
+<script defer src="./pet.js"></script>
+
 </body>
 </html>
