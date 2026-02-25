@@ -15,107 +15,106 @@ body{
     font-family:'Malgun Gothic';
 }
 
-/* 전체 폭 축소 */
-.main-wrapper{
-    max-width:520px;
-    margin:30px auto;
-}
-
 .title{
     text-align:center;
-    margin-bottom:20px;
+    margin:30px 0 20px;
 }
-
 .title small{
     color:#2aa7e8;
     font-weight:bold;
 }
 
-/* 카드 */
 .card{
     background:white;
-    border-radius:16px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.08);
-    padding:18px;
-    margin-bottom:18px;
+    border-radius:18px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    padding:20px;
+    margin-bottom:20px;
 }
 
-/* 자동완성 */
-#pet-suggestions{
-    list-style:none;
-    padding:0;
-    margin:5px 0 0 0;
-    border:1px solid #ddd;
-    border-radius:8px;
-    max-height:180px;
-    overflow-y:auto;
-}
-#pet-suggestions li{
-    padding:8px;
-    cursor:pointer;
-}
-#pet-suggestions li:hover{
-    background:#eef8ff;
-}
-
-/* 능력치 한 줄 */
-.stat-line{
+.stat-row{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:8px;
-}
-.stat-line label{
-    font-size:12px;
-    text-align:center;
-    margin-bottom:3px;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
 }
 
-/* 버튼 */
 .btn-main{
     background:#57b7e4;
     border:none;
     color:white;
-    height:46px;
-    font-size:17px;
+    height:50px;
+    font-size:18px;
+}
+.btn-main:hover{
+    background:#3aa6d7;
 }
 
 #result-wrapper{
-    max-height:360px;
+    max-height:400px;
     overflow-y:auto;
+}
+
+#pet-suggestions{
+    list-style:none;
+    padding:0;
+    margin:5px 0 0;
+    max-height:160px;
+    overflow-y:auto;
+    border:1px solid #ddd;
+    display:none;
+    background:#fff;
+    position:absolute;
+    width:92%;
+    z-index:999;
+}
+#pet-suggestions li{
+    padding:6px 10px;
+    cursor:pointer;
+}
+#pet-suggestions li:hover{
+    background:#eaf6ff;
 }
 </style>
 </head>
 
 <body>
 
-<div class="main-wrapper">
+<div class="container">
 
 <div class="title">
-<h3>Happy Pet Calculator</h3>
+<h2>Happy Pet Calculator</h2>
 <small>⭐별과바다 부족⭐</small>
 </div>
 
 <div class="card">
 
 <label>페트 이름</label>
-<input type="text" id="name" class="form-control" autocomplete="off">
+<div class="input-group">
+<input type="text" class="form-control" id="name" autocomplete="off">
+<span class="input-group-btn">
+<button class="btn btn-info" id="search">검색</button>
+</span>
+</div>
 <ul id="pet-suggestions"></ul>
 
 <hr>
 
-<div class="stat-line">
+<div class="stat-row">
 <div>
 <label>내구</label>
 <input type="number" id="hp" class="form-control">
 </div>
+
 <div>
 <label>공격</label>
 <input type="number" id="atk" class="form-control">
 </div>
+
 <div>
 <label>방어</label>
 <input type="number" id="def" class="form-control">
 </div>
+
 <div>
 <label>순발</label>
 <input type="number" id="agi" class="form-control">
@@ -165,6 +164,5 @@ body{
 
 <script src="pet.js"></script>
 <script src="ui.js"></script>
-
 </body>
 </html>
