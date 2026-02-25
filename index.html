@@ -5,96 +5,84 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>⭐ 별과바다 부족 계산기 ⭐</title>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="./pet.js" defer></script>
 
 <style>
 body{
     margin:0;
     font-family:Arial, sans-serif;
-    background:#eaf1fb;
+    background:#eef3fb;
 }
 
 header{
-    background:linear-gradient(180deg,#7da9e8,#8fb6ef);
+    background:linear-gradient(180deg,#7faee8,#93bdf0);
     text-align:center;
-    padding:25px 10px;
+    padding:22px 10px;
 }
-
-header h1{
-    margin:0;
-    font-size:26px;
-}
-
-header .sub{
-    margin-top:6px;
-    font-size:14px;
-}
+header h1{margin:0;font-size:24px;}
+header .sub{font-size:13px;margin-top:6px;}
 
 .wrapper{
-    max-width:1400px;
-    margin:40px auto;
-    padding:0 30px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns: 380px 380px 1fr;
-    gap:25px;
+    max-width:720px;
+    margin:35px auto;
+    padding:0 20px;
 }
 
 .card{
     background:white;
-    border-radius:16px;
-    padding:20px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    border-radius:14px;
+    padding:18px;
+    box-shadow:0 6px 16px rgba(0,0,0,0.08);
 }
 
-.card h2{
+h2{
     margin-top:0;
-    font-size:18px;
-    margin-bottom:15px;
+    font-size:17px;
 }
 
 label{
     font-size:13px;
     font-weight:bold;
+    margin-top:12px;
     display:block;
-    margin-top:10px;
+}
+
+.input-row{
+    display:flex;
+    align-items:center;
+    gap:6px;
 }
 
 input{
-    width:100%;
-    padding:10px;
-    border-radius:10px;
-    border:1px solid #ccd6e5;
-    margin-top:6px;
-    box-sizing:border-box;
+    flex:1;
+    padding:8px 10px;
+    border-radius:8px;
+    border:1px solid #cfd7e6;
 }
 
 button{
-    width:100%;
-    padding:12px;
+    padding:8px 10px;
     border:none;
-    border-radius:12px;
-    background:#4c86e8;
+    border-radius:8px;
+    background:#4a86e8;
     color:white;
-    font-weight:bold;
-    margin-top:15px;
     cursor:pointer;
 }
 
-button:hover{
-    background:#3b6fcb;
+button.small{
+    width:30px;
+    padding:6px;
 }
 
 #pet-suggestions{
     list-style:none;
-    padding:0;
     margin:0;
-    max-height:250px;
+    padding:0;
+    max-height:220px;
     overflow-y:auto;
     border:1px solid #ccd6e5;
-    border-radius:10px;
+    border-radius:8px;
     background:white;
     position:absolute;
     width:100%;
@@ -102,10 +90,9 @@ button:hover{
 }
 
 #pet-suggestions li{
-    padding:8px 10px;
+    padding:6px 8px;
     cursor:pointer;
 }
-
 #pet-suggestions li:hover{
     background:#e6f0ff;
 }
@@ -114,16 +101,18 @@ button:hover{
     position:relative;
 }
 
-#sinfo{
-    margin-top:10px;
-    font-size:13px;
-    font-weight:bold;
+#myPet{
+    margin-top:15px;
 }
 
-@media(max-width:1200px){
-    .grid{
-        grid-template-columns:1fr;
-    }
+table{
+    width:100%;
+    font-size:13px;
+    border-collapse:collapse;
+}
+td,th{
+    padding:6px;
+    border-bottom:1px solid #e6edf5;
 }
 </style>
 </head>
@@ -137,63 +126,50 @@ button:hover{
 </header>
 
 <div class="wrapper">
-<div class="grid">
-
-<!-- 좌측 -->
 <div class="card">
-<h2>초기치 8등급 확률</h2>
+
+<h2>초기치 8등급 확률 계산</h2>
 
 <label>페트 이름</label>
-<div class="suggest-wrap">
+<div class="suggest-wrap input-row">
+<button id="dropdownBtn" class="small">▼</button>
 <input id="name" autocomplete="off">
+<button id="searchBtn" class="small">🔍</button>
 <ul id="pet-suggestions"></ul>
 </div>
 
-<div id="sinfo"></div>
-
 <label>내구력</label>
+<div class="input-row">
+<button class="small" onclick="changeStat('hp',-1)">-</button>
 <input id="hp" type="number">
+<button class="small" onclick="changeStat('hp',1)">+</button>
+</div>
 
 <label>공격력</label>
+<div class="input-row">
+<button class="small" onclick="changeStat('atk',-1)">-</button>
 <input id="atk" type="number">
+<button class="small" onclick="changeStat('atk',1)">+</button>
+</div>
 
 <label>방어력</label>
+<div class="input-row">
+<button class="small" onclick="changeStat('def',-1)">-</button>
 <input id="def" type="number">
+<button class="small" onclick="changeStat('def',1)">+</button>
+</div>
 
 <label>순발력</label>
+<div class="input-row">
+<button class="small" onclick="changeStat('agi',-1)">-</button>
 <input id="agi" type="number">
-
-<button id="calcBtn">8등급 확률 계산</button>
-
+<button class="small" onclick="changeStat('agi',1)">+</button>
 </div>
 
-<!-- 가운데 -->
-<div class="card">
-<h2>성장 분석</h2>
+<button id="calculateBtn" style="margin-top:14px;width:100%;">계산하기</button>
 
-<label>현재 레벨</label>
-<input id="curLv" type="number">
-
-<label>현재 내구력</label>
-<input id="curHp" type="number">
-
-<label>현재 공격력</label>
-<input id="curAtk" type="number">
-
-<label>현재 방어력</label>
-<input id="curDef" type="number">
-
-<label>현재 순발력</label>
-<input id="curAgi" type="number">
-
-<button>120레벨 성장 분석</button>
-</div>
-
-<!-- 우측 -->
-<div class="card">
-<h2>성장 그래프</h2>
-<canvas id="graphArea" style="height:500px;"></canvas>
-</div>
+<div id="myPet"></div>
+<div id="resultArea"></div>
 
 </div>
 </div>
