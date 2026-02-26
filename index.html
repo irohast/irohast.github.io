@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>라프땅의 놀이터</title>
 
 <link rel="stylesheet" href="dark.css">
@@ -14,111 +13,63 @@
 
 <header class="top-header">
     <h1>라프땅의 놀이터</h1>
-    <p class="subtitle">⭐ 별과바다 부족 전용 도구 사이트 ⭐</p>
-    <small>환생/진화 페트는 취급 안합니다. 로직이 달라서</small>
+    <p class="subtitle">⭐ 별과바다 부족 전용 ⭐</p>
 </header>
 
 <main class="layout">
 
-<section class="panel" id="left-panel">
-<h2>🎲 별바 계산기 🎲</h2>
-<small>⭐ 별과바다 부족 ⭐</small><br>
-<small>문의는 라프땅에게</small>
-
-<div class="calc-container">
-
-<label>페트이름</label>
-<select id="pet-name">
-<option value="">페트 선택</option>
-</select>
-
-<div class="stat-row">
-<span>내구력</span>
-<button onclick="changeStat('hp',-1)">-</button>
-<input type="number" id="hp" value="0">
-<button onclick="changeStat('hp',1)">+</button>
-</div>
-
-<div class="stat-row">
-<span>공격력</span>
-<button onclick="changeStat('atk',-1)">-</button>
-<input type="number" id="atk" value="0">
-<button onclick="changeStat('atk',1)">+</button>
-</div>
-
-<div class="stat-row">
-<span>방어력</span>
-<button onclick="changeStat('def',-1)">-</button>
-<input type="number" id="def" value="0">
-<button onclick="changeStat('def',1)">+</button>
-</div>
-
-<div class="stat-row">
-<span>순발력</span>
-<button onclick="changeStat('agi',-1)">-</button>
-<input type="number" id="agi" value="0">
-<button onclick="changeStat('agi',1)">+</button>
-</div>
-
-<button class="calc-btn" onclick="runCalc()">계산하기</button>
-
-<div class="excellent-box">
-<h3>⭐ 우수확률 ⭐</h3>
-<div id="excellent-rate">계산 전</div>
-</div>
-
-<!-- 🔥🔥🔥 엔진 실행용 🔥🔥🔥 -->
-<div style="display:none;">
-
-    <!-- 엔진 입력 -->
-    <input type="text" id="name">
-
-    <!-- S초기치 출력 -->
-    <div id="myPet">
-        <table><tbody></tbody></table>
-    </div>
-
-    <!-- 계산 결과 테이블 -->
-    <div id="result">
-        <table><tbody></tbody></table>
-    </div>
-
-    <!-- S등급 확률 표시 -->
-    <div id="srank-label"></div>
-
-    <!-- ★ 핵심 트리거 버튼 (pet.js가 반드시 찾는다) -->
-    <button id="search"></button>
-    <button id="calculate"></button>
-
-    <!-- ★★★ 이것이 없으면 계산 완료가 절대 안됨 ★★★ -->
-    <div id="result-master-container"></div>
-
-</div>
-
-</div>
-</section>
-
 <section class="panel">
-<h2>📊 성장 추적기</h2>
-<div class="coming">내 페트 분석 기능 준비중...</div>
-</section>
 
-<section class="panel">
-<h2>📈 성장 그래프</h2>
-<div class="coming">그래프 시스템 준비중...</div>
+<h2>펫 계산기</h2>
+
+<label>페트 선택</label>
+<select id="pet-name"></select>
+
+<div class="stat">
+내구 <input id="hp" type="number">
+공격 <input id="atk" type="number">
+방어 <input id="def" type="number">
+순발 <input id="agi" type="number">
+</div>
+
+<button id="run-btn">계산하기</button>
+
+<div class="result-box">
+<div id="rate">우수확률 : 대기중</div>
+<div id="s-init"></div>
+<div id="s-grow"></div>
+</div>
+
+<div class="top10">
+<h3>가능 결과 TOP10</h3>
+<div id="top10-list"></div>
+</div>
+
 </section>
 
 </main>
 
-<footer class="footer">
-<p>© 2026 라프땅의 놀이터</p>
-</footer>
+
+<!-- ================= 엔진 영역 (절대 건드리지 말것) ================= -->
+<div style="display:none">
+
+<input id="name">
+
+<div id="myPet"><table><tbody></tbody></table></div>
+<div id="result"><table><tbody></tbody></table></div>
+<div id="srank-label"></div>
+
+<button id="search"></button>
+<button id="calculate"></button>
+
+<div id="result-master-container"></div>
+
+</div>
 
 <script>
-/* ★ 원본과 동일하게 맞춤 (중요) */
-var pet = [];
-var btnName = "";
-var result = [];
+var pet=[];
+var btnName="";
+var result=[];
 </script>
 
 <script src="pet.js"></script>
