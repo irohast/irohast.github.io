@@ -211,7 +211,7 @@ function print() {
     }
 
     // 8등급이 0건이어도 (8등급: 0.00%)라고 정상 표시됩니다.
-    $("#srank-label").html('S 초기치<br><span style="color:#d9534f; font-size:11px; font-weight:bold;">( sRankRate + '%)</span>');
+    $("#srank-label").html('S 초기치<br><span style="color:#d9534f; font-size:11px; font-weight:bold;">( sRankRate %)</span>');
     
     alert(message);
 }
