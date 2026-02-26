@@ -72,17 +72,17 @@ function runCalc(){
         return;
     }
 
-    btnName="calculate";
+btnName="calculate";
 
-    $("#name").val(name);
-    $("#hp").val(parseInt(document.getElementById("hp").value||0));
-    $("#atk").val(parseInt(document.getElementById("atk").value||0));
-    $("#def").val(parseInt(document.getElementById("def").value||0));
-    $("#agi").val(parseInt(document.getElementById("agi").value||0));
+document.getElementById("name").value = name;
 
-const copiedPet = JSON.parse(JSON.stringify(found));
-setSRank(copiedPet);
-setBase(copiedPet);
+document.getElementById("hp").value = parseInt(document.getElementById("hp").value||0);
+document.getElementById("atk").value = parseInt(document.getElementById("atk").value||0);
+document.getElementById("def").value = parseInt(document.getElementById("def").value||0);
+document.getElementById("agi").value = parseInt(document.getElementById("agi").value||0);
+
+setSRank(found);
+setBase(found);
 
 setTimeout(()=>{
     const label = document.getElementById("srank-label");
@@ -99,6 +99,7 @@ setTimeout(()=>{
     }
 },400);
 }
+
 
 
 
