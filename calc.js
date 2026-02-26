@@ -80,9 +80,9 @@ function runCalc(){
     $("#def").val(parseInt(document.getElementById("def").value||0));
     $("#agi").val(parseInt(document.getElementById("agi").value||0));
 
-    const copiedPet = JSON.parse(JSON.stringify(found));
-    setSRank(copiedPet);
-    setBase(found);
+const copiedPet = JSON.parse(JSON.stringify(found));
+setSRank(copiedPet);
+setBase(copiedPet);
 
 setTimeout(()=>{
     const label = document.getElementById("srank-label");
@@ -99,6 +99,7 @@ setTimeout(()=>{
     }
 },400);
 }
+
 
 
 
