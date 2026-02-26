@@ -1,38 +1,48 @@
 let petData=[];
 
-/* 펫 로드 */
+/* 펫 데이터 로드 */
 fetch("pets.json")
 .then(r=>r.json())
 .then(data=>{
-    pet = JSON.parse(JSON.stringify(data));
+    pet=JSON.parse(JSON.stringify(data));
     petData=data;
+});
 
-    const sel=document.getElementById("pet-name");
-    sel.innerHTML="<option value=''>선택</option>";
+/* 자동완성 */
+const searchInput=document.getElementById("pet-search");
+const suggestionBox=document.getElementById("suggestions");
 
-    data.sort((a,b)=>a.name.localeCompare(b.name,'ko'))
-    .forEach(p=>{
-        const o=document.createElement("option");
-        o.value=p.name;
-        o.textContent=p.name;
-        sel.appendChild(o);
+searchInput.addEventListener("input",function(){
+
+    const value=this.value.trim();
+    suggestionBox.innerHTML="";
+    if(!value) return;
+
+    const filtered=petData.filter(p=>p.name.includes(value)).slice(0,15);
+
+    filtered.forEach(p=>{
+        const div=document.createElement("div");
+        div.className="suggest-item";
+        div.textContent=p.name;
+
+        div.onclick=()=>{
+            searchInput.value=p.name;
+            suggestionBox.innerHTML="";
+            startSearch(p.name);
+        };
+
+        suggestionBox.appendChild(div);
     });
 });
 
-/* ===== S초기치 자동 입력 ===== */
-document.getElementById("pet-name").addEventListener("change",async function(){
-
-    const name=this.value;
-    if(!name) return;
+/* 검색 실행 (S초기치 생성) */
+async function startSearch(name){
 
     document.getElementById("name").value=name;
-
     btnName="search";
 
-    /* 핵심 : 실제 사용자처럼 클릭 이벤트 발생 */
     $("#search").trigger("click");
 
-    /* 엔진 완료 대기 */
     await waitFor(()=>$("#myPet tbody tr").length>0,3000);
 
     const td=$("#myPet tbody tr:first td");
@@ -42,41 +52,31 @@ document.getElementById("pet-name").addEventListener("change",async function(){
     $("#def").val(parseInt(td.eq(3).text()));
     $("#agi").val(parseInt(td.eq(4).text()));
 
-    /* S초기치 표시 */
-    $("#s-init").text(
-        `S초기치 : ${td.eq(1).text()} / ${td.eq(2).text()} / ${td.eq(3).text()} / ${td.eq(4).text()}`
-    );
-});
+    $("#s-init").text(`S초기치 : ${td.eq(1).text()} / ${td.eq(2).text()} / ${td.eq(3).text()} / ${td.eq(4).text()}`);
+}
 
-
-/* ===== 계산 ===== */
+/* 계산 */
 document.getElementById("run-btn").addEventListener("click",async function(){
 
-    const name=$("#pet-name").val();
-    if(!name){alert("펫 선택");return;}
+    const name=searchInput.value;
+    if(!name){alert("펫 이름 입력");return;}
 
-    $("#name").val(name);
+    document.getElementById("name").value=name;
     btnName="calculate";
 
     $("#calculate").trigger("click");
 
     await waitFor(()=>$("#srank-label").text().length>0,6000);
 
-    /* 우수확률 */
     const text=$("#srank-label").text();
     const m=text.match(/\((.*?)\)/);
 
-    if(m) $("#rate").text("우수확률 : "+m[1]+"%");
-    else $("#rate").text("계산 실패");
+    if(m) $("#excellent-rate").text(m[1]+"%");
+    else $("#excellent-rate").text("계산 실패");
 
-
-    /* S성장률 표시 */
     const grow=$("#myPet tbody tr").eq(1).find("td");
-    $("#s-grow").text(
-        `S성장률 : ${grow.eq(1).text()} / ${grow.eq(2).text()} / ${grow.eq(3).text()} / ${grow.eq(4).text()}`
-    );
+    $("#s-grow").text(`S성장률 : ${grow.eq(1).text()} / ${grow.eq(2).text()} / ${grow.eq(3).text()} / ${grow.eq(4).text()}`);
 
-    /* TOP10 표시 */
     await waitFor(()=>$("#result tbody tr").length>0,6000);
 
     const rows=$("#result tbody tr");
@@ -89,8 +89,7 @@ document.getElementById("run-btn").addEventListener("click",async function(){
     $("#top10-list").html(html);
 });
 
-
-/* ===== 대기 유틸 ===== */
+/* 대기 함수 */
 function waitFor(cond,timeout){
 return new Promise((resolve,reject)=>{
     const start=Date.now();
