@@ -84,13 +84,22 @@ function runCalc(){
     setSRank(copiedPet);
     setBase(found);
 
-    setTimeout(()=>{
-        const label=document.getElementById("srank-label");
-        if(label){
-            document.getElementById("excellent-rate").innerHTML=label.innerText;
-        }
-    },300);
+setTimeout(()=>{
+    const label = document.getElementById("srank-label");
+    if(!label) return;
+
+    // "(8등급: xx.xx%)" 부분만 추출
+    const txt = label.innerText;
+    const match = txt.match(/\((.*?)\)/);
+
+    if(match){
+        document.getElementById("excellent-rate").innerText = "우수확률 : " + match[1];
+    }else{
+        document.getElementById("excellent-rate").innerText = "계산 실패";
+    }
+},400);
 }
+
 
 
 
