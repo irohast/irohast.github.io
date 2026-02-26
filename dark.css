@@ -5,13 +5,29 @@ body{
     color:#e5e7eb;
 }
 
+/* 헤더 */
+.top-header{
+    text-align:center;
+    padding:30px 10px 15px;
+}
+.top-header h1{
+    margin:0;
+    font-size:34px;
+    color:#facc15;
+    text-shadow:0 0 12px rgba(250,204,21,0.6);
+}
+.subtitle{
+    margin-top:6px;
+    color:#9ca3af;
+}
+
+/* 레이아웃 */
 .layout{
     display:grid;
     grid-template-columns:1fr 1fr 1fr;
     gap:20px;
     padding:20px;
 }
-
 .panel{
     background:#111827;
     border:1px solid #374151;
@@ -21,19 +37,28 @@ body{
     box-shadow:0 0 25px rgba(0,0,0,0.6);
 }
 
+/* 검색 */
 .autocomplete{position:relative;margin-bottom:15px;}
 
-.search-row{position:relative;width:100%;}
-
-#pet-search{
+.search-row{
+    position:relative;
     width:100%;
     height:42px;
-    padding:8px 40px 8px 10px;
+}
+
+#pet-search{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    padding:0 42px 0 12px;
     background:#1f2937;
     border:1px solid #374151;
     color:white;
     border-radius:6px;
     box-sizing:border-box;
+    line-height:42px;
 }
 
 #open-list{
@@ -41,15 +66,19 @@ body{
     right:6px;
     top:50%;
     transform:translateY(-50%);
-    width:30px;
-    height:30px;
+    width:28px;
+    height:28px;
     border:none;
     background:#374151;
     color:#facc15;
     border-radius:4px;
     cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
+/* 드롭다운 */
 #suggestions,.petlist{
     position:absolute;
     background:#020617;
@@ -60,24 +89,21 @@ body{
     z-index:20;
     top:44px;
 }
-
 .petlist{display:none;}
-
 .suggest-item,.pet-item{
     padding:8px;
     cursor:pointer;
     border-bottom:1px solid #1f2937;
 }
-
 .suggest-item:hover,.pet-item:hover{background:#374151;}
 
+/* 능력치 */
 .stat-row{
     display:flex;
     justify-content:space-between;
     align-items:center;
     margin:10px 0;
 }
-
 .stat-row input{
     width:120px;
     height:42px;
@@ -88,6 +114,7 @@ body{
     border-radius:6px;
 }
 
+/* 버튼 */
 button{
     width:100%;
     padding:12px;
@@ -99,6 +126,7 @@ button{
     cursor:pointer;
 }
 
+/* 결과 */
 .excellent-box{
     margin-top:20px;
     padding:15px;
@@ -107,7 +135,6 @@ button{
     border-radius:10px;
     text-align:center;
 }
-
 .top10{
     margin-top:20px;
     max-height:240px;
@@ -116,13 +143,11 @@ button{
     padding:10px;
     border-radius:10px;
 }
-
 .row{
     padding:6px;
     border-bottom:1px solid #374151;
     font-size:13px;
 }
-
 .coming{
     margin-top:40px;
     text-align:center;
