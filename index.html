@@ -13,60 +13,93 @@
 <style>
 body{
     background:linear-gradient(90deg,#0f1d1b,#142b28,#0f1d1b);
-    color:#e8fdf5;
     font-family:'Malgun Gothic';
+    color:#e6fff2;
 }
 
-/* 3열 레이아웃 */
-.main-wrap{
-    display:grid;
-    grid-template-columns:420px 1fr 420px;
-    gap:40px;
-    padding:40px;
-    align-items:start;
+/* 좌측 카드 */
+.container{
+    max-width:420px;
+    margin-left:60px;
+    margin-top:40px;
+}
+
+.title{
+    text-align:center;
+    margin:20px 0;
 }
 
 .card{
     background:#1b1f1d;
     border-radius:18px;
-    box-shadow:0 0 20px rgba(0,0,0,0.4);
+    box-shadow:0 0 20px rgba(0,0,0,0.5);
     padding:20px;
+    position:relative;
 }
 
-/* 중앙 확률 */
-#probabilityBox{
+/* 입력 + 확률 가로배치 */
+.stat-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+.stat-row input{
+    width:55%;
+}
+
+/* 확률 패널 */
+#probabilityPanel{
+    position:absolute;
+    left:460px;
+    top:240px;
+    width:260px;
     text-align:center;
-    margin-top:160px;
 }
-
-#probTitle{
+.prob-title{
     font-size:24px;
-    margin-bottom:15px;
 }
-
 #probValue{
     font-size:42px;
     color:#27d36b;
     font-weight:bold;
 }
 
-/* 그래프 자리 */
-#graphBox{
-    text-align:center;
-    margin-top:200px;
-    color:#27d36b;
-    font-size:20px;
+/* 결과표 숨김 (엔진은 사용하지만 UI는 안씀) */
+#myPet, #result-master-container{
+    display:none !important;
 }
 
 /* 버튼 */
 .btn-main{
-    background:#4e5a54;
+    background:#5f5a50;
     border:none;
     height:50px;
     font-size:18px;
 }
 .btn-main:hover{
-    background:#6a7771;
+    background:#7a7468;
+}
+
+/* 자동완성 */
+#pet-suggestions{
+    list-style:none;
+    padding:0;
+    margin-top:5px;
+    border:1px solid #444;
+    border-radius:8px;
+    max-height:260px;
+    overflow-y:auto;
+    display:none;
+    background:#1f2522;
+    position:relative;
+    z-index:999;
+}
+#pet-suggestions li{
+    padding:8px;
+}
+#pet-suggestions li:hover{
+    background:#2d3a34;
+    cursor:pointer;
 }
 </style>
 
@@ -74,62 +107,65 @@ body{
 
 <body>
 
-<div class="main-wrap">
+<div class="container">
 
-<!-- 왼쪽 입력 -->
+<div class="title">
+<h2>Happy Pet Calculator</h2>
+<small>⭐별과바다 부족⭐</small>
+</div>
 
 <div class="card">
-
-<h3 style="text-align:center">Happy Pet Calculator</h3>
-<p style="text-align:center;color:#ffd86b;">⭐별과바다 부족⭐</p>
 
 <label>페트 이름</label>
 
 <div class="input-group">
-<span class="input-group-btn">
-<button class="btn btn-default" id="showAll">▼</button>
-</span>
 
 <input type="text" class="form-control" id="name" autocomplete="off">
 
 <span class="input-group-btn">
 <button class="btn btn-info" id="search">검색</button>
+<button class="btn btn-default" id="showAll">▼</button>
 </span>
+
 </div>
 
 <ul id="pet-suggestions"></ul>
+
 <hr>
 
 <div class="stat-row">
+<div>
 <label>내구</label>
 <input type="number" id="hp" class="form-control">
+</div>
 
-<label>공격</label> <input type="number" id="atk" class="form-control">
+<div>
+<label>공격</label>
+<input type="number" id="atk" class="form-control">
+</div>
 
-<label>방어</label> <input type="number" id="def" class="form-control">
+<div>
+<label>방어</label>
+<input type="number" id="def" class="form-control">
+</div>
 
-<label>순발</label> <input type="number" id="agi" class="form-control">
-
+<div>
+<label>순발</label>
+<input type="number" id="agi" class="form-control">
+</div>
 </div>
 
 <br>
 <button id="calculate" class="btn btn-main btn-block">결과 계산하기</button>
 
 </div>
+</div>
 
-<!-- 중앙 확률 -->
+<!-- 확률 -->
 
-<div id="probabilityBox">
-<div id="probTitle">우수확률은 ?</div>
+<div id="probabilityPanel">
+<div class="prob-title">우수확률은 ?</div>
 <div id="probValue">--%</div>
-</div>
-
-<!-- 오른쪽 그래프 자리 -->
-
-<div id="graphBox">
-우측에는 그래프 추가예정
-</div>
-
 </div>
 
 <script>
@@ -145,9 +181,51 @@ function loadPetData() {
         });
 }
 
+function showSuggestions(inputVal) {
+    inputVal = inputVal.toLowerCase();
+    let matches = inputVal ? pet.filter(p => p.name.toLowerCase().includes(inputVal)) : [];
+    let $ul = $('#pet-suggestions');
+    $ul.empty();
+
+    matches.slice(0,15).forEach(p=>{
+        $ul.append('<li>'+p.name+'</li>');
+    });
+
+    matches.length ? $ul.show() : $ul.hide();
+}
+
+function showAllPets(){
+    let $ul = $('#pet-suggestions');
+    $ul.empty();
+    pet.forEach(p=>{
+        $ul.append('<li>'+p.name+'</li>');
+    });
+    $ul.show();
+}
+
 $(document).ready(function() {
 
     loadPetData();
+
+    $("#name").on("input", function(){
+        showSuggestions($(this).val());
+    });
+
+    $("#showAll").on("click", function(){
+        showAllPets();
+    });
+
+    $(document).on("mousedown", "#pet-suggestions li", function(){
+        $("#name").val($(this).text());
+        $("#pet-suggestions").hide();
+        $("#search").click();
+    });
+
+    $(document).click(function(e){
+        if(!$(e.target).closest('#name, #pet-suggestions, #showAll').length){
+            $('#pet-suggestions').hide();
+        }
+    });
 
     $("#search, #calculate").on("click", function() {
         if (pet.length === 0) return;
