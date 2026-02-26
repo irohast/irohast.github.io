@@ -7,10 +7,9 @@
 <title>라프땅의 놀이터</title>
 
 <link rel="stylesheet" href="dark.css">
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
 </head>
+
 <body>
 
 <header class="top-header">
@@ -20,107 +19,101 @@
 
 <main class="layout">
 
-    <!-- 좌측 계산기 영역 -->
-    <section class="panel" id="left-panel">
-        <h2>🎲 별바 계산기 🎲</h2>
-        <small>⭐ 별과바다 부족 ⭐</small><br>
-        <small>문의는 라프땅에게</small>
+<section class="panel" id="left-panel">
+<h2>🎲 별바 계산기 🎲</h2>
+<small>⭐ 별과바다 부족 ⭐</small><br>
+<small>문의는 라프땅에게</small>
 
 <div class="calc-container">
 
-    <!-- 펫 이름 선택 -->
-    <label>페트이름</label>
+<label>페트이름</label>
 <select id="pet-name">
-    <option value="">페트 선택</option>
+<option value="">페트 선택</option>
 </select>
 
-    <!-- 초기치 입력 -->
-    <div class="stat-row">
-        <span>내구력</span>
-        <button onclick="changeStat('hp',-1)">-</button>
-        <input type="number" id="hp" value="0">
-        <button onclick="changeStat('hp',1)">+</button>
-    </div>
+<div class="stat-row">
+<span>내구력</span>
+<button onclick="changeStat('hp',-1)">-</button>
+<input type="number" id="hp" value="0">
+<button onclick="changeStat('hp',1)">+</button>
+</div>
 
-    <div class="stat-row">
-        <span>공격력</span>
-        <button onclick="changeStat('atk',-1)">-</button>
-        <input type="number" id="atk" value="0">
-        <button onclick="changeStat('atk',1)">+</button>
-    </div>
+<div class="stat-row">
+<span>공격력</span>
+<button onclick="changeStat('atk',-1)">-</button>
+<input type="number" id="atk" value="0">
+<button onclick="changeStat('atk',1)">+</button>
+</div>
 
-    <div class="stat-row">
-        <span>방어력</span>
-        <button onclick="changeStat('def',-1)">-</button>
-        <input type="number" id="def" value="0">
-        <button onclick="changeStat('def',1)">+</button>
-    </div>
+<div class="stat-row">
+<span>방어력</span>
+<button onclick="changeStat('def',-1)">-</button>
+<input type="number" id="def" value="0">
+<button onclick="changeStat('def',1)">+</button>
+</div>
 
-    <div class="stat-row">
-        <span>순발력</span>
-        <button onclick="changeStat('agi',-1)">-</button>
-        <input type="number" id="agi" value="0">
-        <button onclick="changeStat('agi',1)">+</button>
-    </div>
+<div class="stat-row">
+<span>순발력</span>
+<button onclick="changeStat('agi',-1)">-</button>
+<input type="number" id="agi" value="0">
+<button onclick="changeStat('agi',1)">+</button>
+</div>
 
-    <!-- 계산 버튼 -->
-    <button class="calc-btn" onclick="runCalc()">계산하기</button>
+<button class="calc-btn" onclick="runCalc()">계산하기</button>
 
-    <!-- 우수확률 표시 -->
-    <div class="excellent-box">
-        <h3>⭐ 우수확률 ⭐</h3>
-        <div id="excellent-rate">계산 전</div>
-    </div>
+<div class="excellent-box">
+<h3>⭐ 우수확률 ⭐</h3>
+<div id="excellent-rate">계산 전</div>
+</div>
 
-    <!-- 숨김 영역 (pet.js 엔진 출력용) -->
+<!-- 🔥 엔진용 숨김 UI (매우 중요) -->
 <div style="display:none;">
-    <input type="hidden" id="name">
 
-    <div id="myPet"><table><tbody></tbody></table></div>
-    <div id="result"><table><tbody></tbody></table></div>
-    <div id="srank-label"></div>
+<input type="text" id="name">
 
-    <!-- ★ pet.js 계산 완료 트리거용 -->
-    <div id="result-master-container"></div>
-    </div>
+<div id="myPet">
+<table><tbody></tbody></table>
+</div>
+
+<div id="result">
+<table><tbody></tbody></table>
+</div>
+
+<div id="srank-label"></div>
+
+<!-- ★★★ 핵심 : 엔진이 찾는 버튼들 ★★★ -->
+<button id="search"></button>
+<button id="calculate"></button>
 
 </div>
-    </section>
 
-    <!-- 중앙 추적기 영역 -->
-    <section class="panel" id="center-panel">
-        <h2>📊 성장 추적기</h2>
-        <div class="coming">
-            내 페트 분석 기능 준비중...
-        </div>
-    </section>
+</div>
+</section>
 
-    <!-- 우측 그래프 영역 -->
-    <section class="panel" id="right-panel">
-        <h2>📈 성장 그래프</h2>
-        <div class="coming">
-            그래프 시스템 준비중...
-        </div>
-    </section>
+<section class="panel">
+<h2>📊 성장 추적기</h2>
+<div class="coming">내 페트 분석 기능 준비중...</div>
+</section>
+
+<section class="panel">
+<h2>📈 성장 그래프</h2>
+<div class="coming">그래프 시스템 준비중...</div>
+</section>
 
 </main>
 
 <footer class="footer">
-    <p>© 2026 라프땅의 놀이터</p>
+<p>© 2026 라프땅의 놀이터</p>
 </footer>
 
 <script>
-var pet = {};
-var btnName = "";
-var result = [];
+var pet = [];
+let btnName = "";
+const result = [];
 </script>
 
 <script src="pet.js"></script>
 <script src="calc.js"></script>
 
-
-
-
-
-
-
+</body>
+</html>
