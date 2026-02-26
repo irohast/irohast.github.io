@@ -15,6 +15,7 @@
 <header class="top-header">
     <h1>라프땅의 놀이터</h1>
     <p class="subtitle">⭐ 별과바다 부족 전용 도구 사이트 ⭐</p>
+    <small>환생/진화 페트는 취급 안합니다. 로직이 달라서</small>
 </header>
 
 <main class="layout">
@@ -66,24 +67,31 @@
 <div id="excellent-rate">계산 전</div>
 </div>
 
-<!-- 🔥 엔진용 숨김 UI (매우 중요) -->
+<!-- 🔥🔥🔥 엔진 실행용 🔥🔥🔥 -->
 <div style="display:none;">
 
-<input type="text" id="name">
+    <!-- 엔진 입력 -->
+    <input type="text" id="name">
 
-<div id="myPet">
-<table><tbody></tbody></table>
-</div>
+    <!-- S초기치 출력 -->
+    <div id="myPet">
+        <table><tbody></tbody></table>
+    </div>
 
-<div id="result">
-<table><tbody></tbody></table>
-</div>
+    <!-- 계산 결과 테이블 -->
+    <div id="result">
+        <table><tbody></tbody></table>
+    </div>
 
-<div id="srank-label"></div>
+    <!-- S등급 확률 표시 -->
+    <div id="srank-label"></div>
 
-<!-- ★★★ 핵심 : 엔진이 찾는 버튼들 ★★★ -->
-<button id="search"></button>
-<button id="calculate"></button>
+    <!-- ★ 핵심 트리거 버튼 (pet.js가 반드시 찾는다) -->
+    <button id="search"></button>
+    <button id="calculate"></button>
+
+    <!-- ★★★ 이것이 없으면 계산 완료가 절대 안됨 ★★★ -->
+    <div id="result-master-container"></div>
 
 </div>
 
@@ -107,9 +115,10 @@
 </footer>
 
 <script>
+/* ★ 원본과 동일하게 맞춤 (중요) */
 var pet = [];
-let btnName = "";
-const result = [];
+var btnName = "";
+var result = [];
 </script>
 
 <script src="pet.js"></script>
