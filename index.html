@@ -11,10 +11,35 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 <style>
+
+/* ---------- 다크 / 라이트 자동 ---------- */
+:root{
+    --bg:#ffffff;
+    --card:#f3f4f6;
+    --text:#111;
+    --input:#ffffff;
+    --border:#c9c9c9;
+    --accent:#2ecc71;
+}
+@media (prefers-color-scheme: dark){
+:root{
+    --bg:#0f1115;
+    --card:#1a1d22;
+    --text:#eee7c9;
+    --input:#0e0f13;
+    --border:#7c6f4a;
+    --accent:#00e676;
+}
+}
+
 body{
-    background:#0f1115;
-    color:#eee7c9;
+    background:var(--bg);
+    color:var(--text);
     font-family:Pretendard, sans-serif;
+}
+
+.container{
+    max-width:900px;
 }
 
 /* 제목 */
@@ -26,18 +51,11 @@ body{
     color:#ffd84d;
 }
 
-/* 펫 이름 입력 */
-#name{
-    height:45px;
-    font-size:16px;
-}
-
-/* 자동완성 */
+/* 자동완성 숨김 (엔진 필수조건) */
 #pet-suggestions-box{
     display:none;
-    position:relative;
-    background:#1a1d22;
-    border:1px solid #444;
+    background:var(--card);
+    border:1px solid var(--border);
 }
 #pet-suggestions{
     list-style:none;
@@ -49,59 +67,71 @@ body{
     cursor:pointer;
 }
 #pet-suggestions li:hover{
-    background:#333;
+    background:#3333;
 }
 
-/* 스탯 한 줄 정렬 */
-.stat-card .row{
-    display:flex;
-    gap:10px;
-    flex-wrap:nowrap;
-}
-.stat-card .col-xs-6{
-    width:25% !important;
-    padding:0;
+/* 스탯 영역 좌우 배치 */
+.stat-wrapper{
+    position:relative;
 }
 
-/* 스탯 입력창 */
+/* 입력칸 한줄 */
+.stat-row{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin-top:15px;
+}
+
+/* 입력칸 */
 .stat-group input{
-    background:#0e0f13;
-    color:#fff;
-    border:1px solid #7c6f4a;
+    background:var(--input);
+    border:1px solid var(--border);
+    color:var(--text);
     text-align:center;
     height:42px;
+    width:100%;
 }
 
 /* 계산 버튼 */
 #calculate{
-    margin-top:15px;
+    margin-top:18px;
     height:50px;
     font-size:17px;
     background:#6c6450;
     border:none;
 }
 
-/* 우수확률 표시 */
+/* 우수확률 박스 */
 .srank{
-    font-size:42px !important;
-    color:#8fff98 !important;
+    position:absolute;
+    right:-290px;
+    top:60px;
+    width:250px;
+    background:var(--card);
+    border-radius:14px;
+    padding:25px 10px;
     text-align:center;
+    font-size:42px !important;
+    color:var(--accent) !important;
     font-weight:bold;
+    box-shadow:0 0 20px rgba(0,0,0,.6);
 }
 .srank::before{
-    content:"우수확률";
+    content:"우수확률은?";
     display:block;
     font-size:18px;
     color:#ffd84d;
-    margin-bottom:6px;
+    margin-bottom:10px;
 }
 
-/* 결과 리스트 10개 스크롤 */
+/* 결과 스크롤 10개 */
 #result{
     max-height:260px;
     overflow-y:auto;
     display:block;
 }
+
 </style>
 
 </head>
@@ -111,21 +141,19 @@ body{
 <div class="container">
 
 <div class="title">
-<h2>🎲별바 계산기🎲</h2>
+<h2>🎲 별바 계산기 🎲</h2>
 <small>⭐ 별과바다 부족 ⭐</small>
 </div>
 <hr>
 
-<div class="stat-card">
+<div class="stat-wrapper">
 
-<div class="stat-label">펫 이름</div>
+<label>펫 이름</label>
 
 <div class="input-group">
 <input type="text" class="form-control" id="name" autocomplete="off">
 <span class="input-group-btn">
-<button class="btn btn-primary" id="search">
-<span class="glyphicon glyphicon-search"></span>
-</button>
+<button class="btn btn-default" id="search">🔍</button>
 </span>
 </div>
 
@@ -133,59 +161,41 @@ body{
 <ul id="pet-suggestions"></ul>
 </div>
 
-<br>
+<div class="stat-row">
 
-<div class="row">
-
-<div class="col-xs-6">
-<div class="stat-label">내구</div>
+<div>
+<label>내구</label>
 <div class="input-group stat-group">
-<span class="input-group-btn">
-<button class="btn btn-default" onclick="changeStat('hp',-1)">-</button>
-</span>
+<span class="input-group-btn"><button class="btn btn-default" onclick="changeStat('hp',-1)">-</button></span>
 <input type="number" id="hp" step="0.01">
-<span class="input-group-btn">
-<button class="btn btn-default" onclick="changeStat('hp',1)">+</button>
-</span>
+<span class="input-group-btn"><button class="btn btn-default" onclick="changeStat('hp',1)">+</button></span>
 </div>
 </div>
 
-<div class="col-xs-6">
-<div class="stat-label">공격</div>
+<div>
+<label>공격</label>
 <div class="input-group stat-group">
-<span class="input-group-btn">
-<button class="btn btn-default" onclick="changeStat('atk',-1)">-</button>
-</span>
+<span class="input-group-btn"><button class="btn btn-default" onclick="changeStat('atk',-1)">-</button></span>
 <input type="number" id="atk" step="0.01">
-<span class="input-group-btn">
-<button class="btn btn-default" onclick="changeStat('atk',1)">+</button>
-</span>
+<span class="input-group-btn"><button class="btn btn-default" onclick="changeStat('atk',1)">+</button></span>
 </div>
 </div>
 
-<div class="col-xs-6">
-<div class="stat-label">방어</div>
+<div>
+<label>방어</label>
 <div class="input-group stat-group">
-<span class="input-group-btn">
-<button class="btn btn-default" onclick="changeStat('def',-1)">-</button>
-</span>
+<span class="input-group-btn"><button class="btn btn-default" onclick="changeStat('def',-1)">-</button></span>
 <input type="number" id="def" step="0.01">
-<span class="input-group-btn">
-<button class="btn btn-default" onclick="changeStat('def',1)">+</button>
-</span>
+<span class="input-group-btn"><button class="btn btn-default" onclick="changeStat('def',1)">+</button></span>
 </div>
 </div>
 
-<div class="col-xs-6">
-<div class="stat-label">순발</div>
+<div>
+<label>순발</label>
 <div class="input-group stat-group">
-<span class="input-group-btn">
-<button class="btn btn-default" onclick="changeStat('agi',-1)">-</button>
-</span>
+<span class="input-group-btn"><button class="btn btn-default" onclick="changeStat('agi',-1)">-</button></span>
 <input type="number" id="agi" step="0.01">
-<span class="input-group-btn">
-<button class="btn btn-default" onclick="changeStat('agi',1)">+</button>
-</span>
+<span class="input-group-btn"><button class="btn btn-default" onclick="changeStat('agi',1)">+</button></span>
 </div>
 </div>
 
@@ -197,9 +207,7 @@ body{
 
 </div>
 
-<!-- 결과 출력 영역 (pet.js가 직접 사용 — id 절대 변경 금지) -->
-
-<div id="result-master-container" style="margin-top:20px;">
+<div id="result-master-container" style="margin-top:25px;">
 <div id="result" class="table-responsive">
 <table class="table table-striped table-condensed">
 <thead>
@@ -220,6 +228,18 @@ body{
 </div>
 
 <script src="pet.js"></script>
+
+<script>
+/* 자동완성 한글 정렬 (엔진 수정 없음) */
+const observer=new MutationObserver(()=>{
+const ul=document.getElementById("pet-suggestions");
+const items=[...ul.querySelectorAll("li")];
+items.sort((a,b)=>a.innerText.localeCompare(b.innerText,'ko'));
+ul.innerHTML="";
+items.forEach(i=>ul.appendChild(i));
+});
+observer.observe(document.getElementById("pet-suggestions"),{childList:true});
+</script>
 
 </body>
 </html>
