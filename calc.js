@@ -41,7 +41,7 @@ searchInput.addEventListener("input",function(){
     });
 });
 
-/* ▼ 전체 목록 */
+/* ▼ 전체목록 */
 openBtn.onclick=()=>{
     if(allList.style.display==="block"){
         allList.style.display="none";
@@ -82,10 +82,10 @@ async function startSearch(name){
 
     const td=$("#myPet tbody tr:first td");
 
-    $("#hp").val(parseFloat(td.eq(1).text()));
-    $("#atk").val(parseFloat(td.eq(2).text()));
-    $("#def").val(parseFloat(td.eq(3).text()));
-    $("#agi").val(parseFloat(td.eq(4).text()));
+    $("#hp").val(Math.floor(parseFloat(td.eq(1).text())));
+    $("#atk").val(Math.floor(parseFloat(td.eq(2).text())));
+    $("#def").val(Math.floor(parseFloat(td.eq(3).text())));
+    $("#agi").val(Math.floor(parseFloat(td.eq(4).text())));
 
     $("#s-init").text(
         `S초기치 : ${td.eq(1).text()} / ${td.eq(2).text()} / ${td.eq(3).text()} / ${td.eq(4).text()}`
@@ -132,15 +132,10 @@ document.getElementById("run-btn").addEventListener("click",async function(){
         const rank=tds.eq(1).text().trim();
         if(rank!=="8") return;
 
-        let hp=tds.eq(2).text();
-        let atk=tds.eq(3).text();
-        let def=tds.eq(4).text();
-        let agi=tds.eq(5).text();
-
-        hp=hp.replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
-        atk=atk.replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
-        def=def.replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
-        agi=agi.replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
+        let hp=tds.eq(2).text().replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
+        let atk=tds.eq(3).text().replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
+        let def=tds.eq(4).text().replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
+        let agi=tds.eq(5).text().replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
 
         html+=`<div class="row">${hp} / ${atk} / ${def} / ${agi}</div>`;
     });
@@ -149,6 +144,14 @@ document.getElementById("run-btn").addEventListener("click",async function(){
 
     $("#top10-list").html(html);
 });
+
+/* srank-label 문구 제거 감시 */
+setInterval(()=>{
+    const el=document.getElementById("srank-label");
+    if(el && el.textContent.includes("8등급")){
+        el.textContent="";
+    }
+},200);
 
 function waitFor(cond,timeout){
 return new Promise((resolve,reject)=>{
