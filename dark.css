@@ -111,8 +111,8 @@ body{
 
 .calc-btn{
     width:100%;
-    padding:10px;
-    margin-top:10px;
+    padding:12px;
+    margin-top:22px;
     background:#facc15;
     border:none;
     border-radius:8px;
@@ -137,3 +137,4 @@ body{
     margin-top:0;
     color:#facc15;
 }
+
