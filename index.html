@@ -12,73 +12,61 @@
 
 <style>
 body{
-    background:linear-gradient(180deg,#dff4ff,#eefaff,#f7fdff);
+    background:linear-gradient(90deg,#0f1d1b,#142b28,#0f1d1b);
+    color:#e8fdf5;
     font-family:'Malgun Gothic';
 }
 
-.container{
-    max-width:900px;
-}
-
-.title{
-    text-align:center;
-    margin:30px 0 20px;
-}
-.title small{
-    color:#2aa7e8;
-    font-weight:bold;
+/* 3열 레이아웃 */
+.main-wrap{
+    display:grid;
+    grid-template-columns:420px 1fr 420px;
+    gap:40px;
+    padding:40px;
+    align-items:start;
 }
 
 .card{
-    background:white;
+    background:#1b1f1d;
     border-radius:18px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    box-shadow:0 0 20px rgba(0,0,0,0.4);
     padding:20px;
-    margin-bottom:20px;
 }
 
-.stat-row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
+/* 중앙 확률 */
+#probabilityBox{
+    text-align:center;
+    margin-top:160px;
 }
 
+#probTitle{
+    font-size:24px;
+    margin-bottom:15px;
+}
+
+#probValue{
+    font-size:42px;
+    color:#27d36b;
+    font-weight:bold;
+}
+
+/* 그래프 자리 */
+#graphBox{
+    text-align:center;
+    margin-top:200px;
+    color:#27d36b;
+    font-size:20px;
+}
+
+/* 버튼 */
 .btn-main{
-    background:#57b7e4;
+    background:#4e5a54;
     border:none;
-    color:white;
     height:50px;
     font-size:18px;
 }
 .btn-main:hover{
-    background:#3aa6d7;
-}
-
-#result-wrapper{
-    max-height:400px;
-    overflow-y:auto;
-}
-
-/* 자동완성 목록 */
-#pet-suggestions{
-    list-style:none;
-    padding:0;
-    margin-top:5px;
-    border:1px solid #ddd;
-    border-radius:8px;
-    max-height:260px;
-    overflow-y:auto;
-    display:none;
-    background:white;
-    position:relative;
-    z-index:999;
-}
-#pet-suggestions li{
-    padding:8px;
-}
-#pet-suggestions li:hover{
-    background:#e9f7ff;
-    cursor:pointer;
+    background:#6a7771;
 }
 </style>
 
@@ -86,19 +74,18 @@ body{
 
 <body>
 
-<div class="container">
+<div class="main-wrap">
 
-<div class="title">
-<h2>Happy Pet Calculator</h2>
-<small>⭐별과바다 부족⭐</small>
-</div>
+<!-- 왼쪽 입력 -->
 
 <div class="card">
+
+<h3 style="text-align:center">Happy Pet Calculator</h3>
+<p style="text-align:center;color:#ffd86b;">⭐별과바다 부족⭐</p>
 
 <label>페트 이름</label>
 
 <div class="input-group">
-
 <span class="input-group-btn">
 <button class="btn btn-default" id="showAll">▼</button>
 </span>
@@ -108,33 +95,21 @@ body{
 <span class="input-group-btn">
 <button class="btn btn-info" id="search">검색</button>
 </span>
-
 </div>
 
 <ul id="pet-suggestions"></ul>
-
 <hr>
 
 <div class="stat-row">
-<div>
 <label>내구</label>
 <input type="number" id="hp" class="form-control">
-</div>
 
-<div>
-<label>공격</label>
-<input type="number" id="atk" class="form-control">
-</div>
+<label>공격</label> <input type="number" id="atk" class="form-control">
 
-<div>
-<label>방어</label>
-<input type="number" id="def" class="form-control">
-</div>
+<label>방어</label> <input type="number" id="def" class="form-control">
 
-<div>
-<label>순발</label>
-<input type="number" id="agi" class="form-control">
-</div>
+<label>순발</label> <input type="number" id="agi" class="form-control">
+
 </div>
 
 <br>
@@ -142,61 +117,17 @@ body{
 
 </div>
 
-<!-- S초기치 / S성장률 표 -->
+<!-- 중앙 확률 -->
 
-<div class="card" id="myPet" style="display:none;">
-<table class="table table-bordered">
-<thead>
-<tr>
-<th>구분</th>
-<th>내구</th>
-<th>공격</th>
-<th>방어</th>
-<th>순발</th>
-<th>합</th>
-</tr>
-</thead>
-
-<tbody>
-<tr class="srank">
-<td id="srank-label">S 초기치</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="srank">
-<td>S 성장률</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-
-</table>
+<div id="probabilityBox">
+<div id="probTitle">우수확률은 ?</div>
+<div id="probValue">--%</div>
 </div>
 
-<!-- 분포표 -->
+<!-- 오른쪽 그래프 자리 -->
 
-<div class="card" id="result-master-container" style="display:none;">
-<div id="result-wrapper">
-<table class="table table-striped" id="result">
-<thead>
-<tr>
-<th>번호</th>
-<th>등급</th>
-<th>내구</th>
-<th>공격</th>
-<th>방어</th>
-<th>순발</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-</div>
+<div id="graphBox">
+우측에는 그래프 추가예정
 </div>
 
 </div>
@@ -214,51 +145,9 @@ function loadPetData() {
         });
 }
 
-function showSuggestions(inputVal) {
-    inputVal = inputVal.toLowerCase();
-    let matches = inputVal ? pet.filter(p => p.name.toLowerCase().includes(inputVal)) : [];
-    let $ul = $('#pet-suggestions');
-    $ul.empty();
-
-    matches.slice(0,15).forEach(p=>{
-        $ul.append('<li>'+p.name+'</li>');
-    });
-
-    matches.length ? $ul.show() : $ul.hide();
-}
-
-function showAllPets(){
-    let $ul = $('#pet-suggestions');
-    $ul.empty();
-    pet.forEach(p=>{
-        $ul.append('<li>'+p.name+'</li>');
-    });
-    $ul.show();
-}
-
 $(document).ready(function() {
 
     loadPetData();
-
-    $("#name").on("input", function(){
-        showSuggestions($(this).val());
-    });
-
-    $("#showAll").on("click", function(){
-        showAllPets();
-    });
-
-    $(document).on("mousedown", "#pet-suggestions li", function(){
-        $("#name").val($(this).text());
-        $("#pet-suggestions").hide();
-        $("#search").click();
-    });
-
-    $(document).click(function(e){
-        if(!$(e.target).closest('#name, #pet-suggestions, #showAll').length){
-            $('#pet-suggestions').hide();
-        }
-    });
 
     $("#search, #calculate").on("click", function() {
         if (pet.length === 0) return;
@@ -266,9 +155,7 @@ $(document).ready(function() {
         const foundPet = pet.find(p => p.name === $("#name").val());
         if (!foundPet) { alert("페트 정보를 찾을 수 없습니다."); return; }
 
-        $("#result-master-container").show();
         btnName = this.id;
-        $("#myPet").show();
 
         const copiedPet = JSON.parse(JSON.stringify(foundPet));
         setSRank(copiedPet);
