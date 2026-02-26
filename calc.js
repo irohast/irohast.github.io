@@ -76,17 +76,20 @@ function runCalc(){
     setSRank(found);
     setBase(found);
 
-    setTimeout(()=>{
-        const label = document.getElementById("srank-label");
-        if(!label) return;
+setTimeout(()=>{
+    const label = document.getElementById("srank-label");
 
-        const txt = label.innerText;
-        const match = txt.match(/\((.*?)\)/);
+    if(!label || label.innerText.trim()===""){
+        document.getElementById("excellent-rate").innerText = "계산 실패";
+        return;
+    }
 
-        if(match){
-            document.getElementById("excellent-rate").innerText = "우수확률 : " + match[1];
-        }else{
-            document.getElementById("excellent-rate").innerText = "우수확률 계산 실패";
-        }
-    },400);
-}
+    // (8등급: xx.xx%) 추출
+    const match = label.innerText.match(/\((.*?)\)/);
+
+    if(match){
+        document.getElementById("excellent-rate").innerText = "우수확률 : " + match[1];
+    }else{
+        document.getElementById("excellent-rate").innerText = "우수확률 계산 실패";
+    }
+},700);
