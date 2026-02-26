@@ -64,7 +64,7 @@ body{
 #open-list{
     position:absolute;
     right:6px;
-    top:20%;
+    top:15%;
     transform:translateY(-50%);
     width:28px;
     height:28px;
@@ -153,5 +153,6 @@ button{
     text-align:center;
     color:#9ca3af;
 }
+
 
 
