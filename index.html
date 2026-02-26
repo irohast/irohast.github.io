@@ -2,118 +2,105 @@
 
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>라프의 놀이터</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<title>라프땅의 놀이터</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 <style>
 body{
-    margin:0;
     background:#0f1115;
     color:#eee7c9;
-    font-family:pretendard, sans-serif;
+    font-family:Pretendard, sans-serif;
 }
 
-.wrapper{
-    width:900px;
-    margin:40px auto;
-    display:flex;
-    gap:40px;
-}
-
-.card{
-    background:#1a1d22;
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 0 25px rgba(0,0,0,.6);
-}
-
+/* 제목 */
 .title{
     text-align:center;
-    font-size:34px;
-    margin-bottom:5px;
+    margin-top:30px;
 }
-
-.subtitle{
-    text-align:center;
+.title small{
     color:#ffd84d;
-    margin-bottom:20px;
 }
 
-.input-row{
-    display:flex;
-    gap:14px;
-    margin-top:18px;
-}
-
-.stat-box{
-    display:flex;
-    flex-direction:column;
-    width:90px;
-}
-
-.stat-box label{
-    margin-bottom:6px;
-    font-size:14px;
-}
-
-.stat-box input{
-    background:#0e0f13;
-    border:1px solid #7c6f4a;
-    border-radius:6px;
-    color:#fff;
-    padding:6px;
-    text-align:center;
-}
-
-select{
-    width:100%;
-    padding:8px;
-    background:#0e0f13;
-    border:1px solid #7c6f4a;
-    color:#fff;
-    border-radius:6px;
-}
-
-button{
-    margin-top:18px;
-    width:100%;
-    padding:14px;
-    border:none;
-    background:#6c6450;
-    color:#fff;
+/* 펫 이름 입력 */
+#name{
+    height:45px;
     font-size:16px;
-    border-radius:10px;
+}
+
+/* 자동완성 */
+#pet-suggestions-box{
+    display:none;
+    position:relative;
+    background:#1a1d22;
+    border:1px solid #444;
+}
+#pet-suggestions{
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+#pet-suggestions li{
+    padding:6px;
     cursor:pointer;
 }
+#pet-suggestions li:hover{
+    background:#333;
+}
 
-.result-panel{
+/* 스탯 한 줄 정렬 */
+.stat-card .row{
     display:flex;
-    align-items:center;
-    justify-content:center;
-    width:260px;
+    gap:10px;
+    flex-wrap:nowrap;
+}
+.stat-card .col-xs-6{
+    width:25% !important;
+    padding:0;
 }
 
-#excellentRate{
-    font-size:48px;
-    color:#9dff9a;
+/* 스탯 입력창 */
+.stat-group input{
+    background:#0e0f13;
+    color:#fff;
+    border:1px solid #7c6f4a;
     text-align:center;
+    height:42px;
 }
 
-.list-box{
-    margin-top:25px;
+/* 계산 버튼 */
+#calculate{
+    margin-top:15px;
+    height:50px;
+    font-size:17px;
+    background:#6c6450;
+    border:none;
+}
+
+/* 우수확률 표시 */
+.srank{
+    font-size:42px !important;
+    color:#8fff98 !important;
+    text-align:center;
+    font-weight:bold;
+}
+.srank::before{
+    content:"우수확률";
+    display:block;
+    font-size:18px;
+    color:#ffd84d;
+    margin-bottom:6px;
+}
+
+/* 결과 리스트 10개 스크롤 */
+#result{
     max-height:260px;
     overflow-y:auto;
-}
-
-.list-item{
-    display:grid;
-    grid-template-columns:60px 60px repeat(4,1fr);
-    padding:6px 4px;
-    border-bottom:1px solid #333;
-    font-size:14px;
+    display:block;
 }
 </style>
 
@@ -121,49 +108,114 @@ button{
 
 <body>
 
-<h1 class="title">별과바다 해피 계산기</h1>
-<div class="subtitle">★ 별과바다 부족 ★</div>
+<div class="container">
 
-<div class="wrapper">
+<div class="title">
+<h2>🎲별바 계산기🎲</h2>
+<small>⭐ 별과바다 부족 ⭐</small>
+</div>
+<hr>
 
-```
-<div class="card" style="width:520px">
+<div class="stat-card">
 
-    <label>펫 이름</label>
-    <select id="petSelect"></select>
+<div class="stat-label">펫 이름</div>
 
-    <div class="input-row">
-        <div class="stat-box">
-            <label>내구</label>
-            <input id="stat_hp" type="number" step="0.01">
-        </div>
-        <div class="stat-box">
-            <label>공격</label>
-            <input id="stat_atk" type="number" step="0.01">
-        </div>
-        <div class="stat-box">
-            <label>방어</label>
-            <input id="stat_def" type="number" step="0.01">
-        </div>
-        <div class="stat-box">
-            <label>순발</label>
-            <input id="stat_spd" type="number" step="0.01">
-        </div>
-    </div>
+<div class="input-group">
+<input type="text" class="form-control" id="name" autocomplete="off">
+<span class="input-group-btn">
+<button class="btn btn-primary" id="search">
+<span class="glyphicon glyphicon-search"></span>
+</button>
+</span>
+</div>
 
-    <button id="calcBtn">결과 계산하기</button>
+<div id="pet-suggestions-box">
+<ul id="pet-suggestions"></ul>
+</div>
 
-    <div class="list-box" id="resultList"></div>
+<br>
+
+<div class="row">
+
+<div class="col-xs-6">
+<div class="stat-label">내구</div>
+<div class="input-group stat-group">
+<span class="input-group-btn">
+<button class="btn btn-default" onclick="changeStat('hp',-1)">-</button>
+</span>
+<input type="number" id="hp" step="0.01">
+<span class="input-group-btn">
+<button class="btn btn-default" onclick="changeStat('hp',1)">+</button>
+</span>
+</div>
+</div>
+
+<div class="col-xs-6">
+<div class="stat-label">공격</div>
+<div class="input-group stat-group">
+<span class="input-group-btn">
+<button class="btn btn-default" onclick="changeStat('atk',-1)">-</button>
+</span>
+<input type="number" id="atk" step="0.01">
+<span class="input-group-btn">
+<button class="btn btn-default" onclick="changeStat('atk',1)">+</button>
+</span>
+</div>
+</div>
+
+<div class="col-xs-6">
+<div class="stat-label">방어</div>
+<div class="input-group stat-group">
+<span class="input-group-btn">
+<button class="btn btn-default" onclick="changeStat('def',-1)">-</button>
+</span>
+<input type="number" id="def" step="0.01">
+<span class="input-group-btn">
+<button class="btn btn-default" onclick="changeStat('def',1)">+</button>
+</span>
+</div>
+</div>
+
+<div class="col-xs-6">
+<div class="stat-label">순발</div>
+<div class="input-group stat-group">
+<span class="input-group-btn">
+<button class="btn btn-default" onclick="changeStat('agi',-1)">-</button>
+</span>
+<input type="number" id="agi" step="0.01">
+<span class="input-group-btn">
+<button class="btn btn-default" onclick="changeStat('agi',1)">+</button>
+</span>
+</div>
+</div>
 
 </div>
 
-<div class="card result-panel">
-    <div>
-        <div style="text-align:center;margin-bottom:10px">우수확률</div>
-        <div id="excellentRate">--%</div>
-    </div>
+<button type="button" id="calculate" class="btn btn-primary btn-block">
+결과 계산하기
+</button>
+
 </div>
-```
+
+<!-- 결과 출력 영역 (pet.js가 직접 사용 — id 절대 변경 금지) -->
+
+<div id="result-master-container" style="margin-top:20px;">
+<div id="result" class="table-responsive">
+<table class="table table-striped table-condensed">
+<thead>
+<tr>
+<th>순번</th>
+<th>등급</th>
+<th>내구</th>
+<th>공격</th>
+<th>방어</th>
+<th>순발</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
 
 </div>
 
