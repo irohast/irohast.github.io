@@ -12,16 +12,12 @@
 <body>
 
 <header class="top-header">
-    <h1>라프땅의 놀이터</h1>
-    <p class="subtitle">⭐ 별과바다 부족 전용 도구 사이트 ⭐</p>
+    <h1>🎲 별바 계산기 🎲</h1>
 </header>
 
 <main class="layout">
 
-<!-- 왼쪽 패널 : 계산기 -->
 <section class="panel" id="left-panel">
-
-<h2>🎲 별바 계산기 🎲</h2>
 
 <label>페트 이름</label>
 <div class="autocomplete">
@@ -35,25 +31,10 @@
 <div id="all-pet-list" class="petlist"></div>
 </div>
 
-<div class="stat-row">
-<span>내구력</span>
-<input type="number" id="hp">
-</div>
-
-<div class="stat-row">
-<span>공격력</span>
-<input type="number" id="atk">
-</div>
-
-<div class="stat-row">
-<span>방어력</span>
-<input type="number" id="def">
-</div>
-
-<div class="stat-row">
-<span>순발력</span>
-<input type="number" id="agi">
-</div>
+<div class="stat-row"><span>내구력</span><input type="number" id="hp"></div>
+<div class="stat-row"><span>공격력</span><input type="number" id="atk"></div>
+<div class="stat-row"><span>방어력</span><input type="number" id="def"></div>
+<div class="stat-row"><span>순발력</span><input type="number" id="agi"></div>
 
 <button id="run-btn">계산하기</button>
 
@@ -65,38 +46,24 @@
 </div>
 
 <div class="top10">
-<h3>가능 결과 TOP10</h3>
+<h3>계산 결과</h3>
 <div id="top10-list"></div>
 </div>
 
 </section>
 
-<!-- 가운데 패널 -->
-<section class="panel">
-<h2>📊 성장 추적기</h2>
-<div class="coming">준비중</div>
-</section>
-
-<!-- 오른쪽 패널 -->
-<section class="panel">
-<h2>📈 성장 그래프</h2>
-<div class="coming">준비중</div>
-</section>
+<section class="panel"><div class="coming">준비중</div></section>
+<section class="panel"><div class="coming">준비중</div></section>
 
 </main>
 
-<!-- ===== 엔진용 숨김 영역 (절대 삭제 금지) ===== -->
+<!-- ===== 엔진 영역 ===== -->
 <div style="display:none">
 
 <input id="name">
 
-<div id="myPet">
-<table><tbody></tbody></table>
-</div>
-
-<div id="result">
-<table><tbody></tbody></table>
-</div>
+<div id="myPet"><table><tbody></tbody></table></div>
+<div id="result"><table><tbody></tbody></table></div>
 
 <div id="srank-label"></div>
 
@@ -104,7 +71,6 @@
 <button id="calculate"></button>
 
 <div id="result-master-container"></div>
-
 </div>
 
 <script>
@@ -113,36 +79,38 @@ var btnName="";
 var result=[];
 </script>
 
+<!-- 팝업 제거 -->
+<script>
+window.alert=function(){};
+</script>
+
 <script src="pet.js"></script>
 
-<!-- 🔴 원본 index.html의 실제 엔진 이벤트 이식 -->
+<!-- 원본 엔진 이벤트 이식 -->
 <script>
 $(document).ready(function(){
 
-    $("#search, #calculate").on("click", function(){
+$("#search, #calculate").on("click", function(){
 
-        if(pet.length===0) return;
+    if(pet.length===0) return;
 
-        const foundPet = pet.find(p => p.name === $("#name").val());
-        if(!foundPet) return;
+    const foundPet = pet.find(p => p.name === $("#name").val());
+    if(!foundPet) return;
 
-        btnName=this.id;
+    btnName=this.id;
 
-        const copiedPet=JSON.parse(JSON.stringify(foundPet));
+    const copiedPet=JSON.parse(JSON.stringify(foundPet));
 
-        $("#myPet tbody").empty();
-        $("#result tbody").empty();
-        result.length=0;
+    $("#myPet tbody").empty();
+    $("#result tbody").empty();
+    result.length=0;
 
-        setSRank(copiedPet);
-        setBase(foundPet);
-    });
-
+    setSRank(copiedPet);
+    setBase(foundPet);
+});
 });
 </script>
 
 <script src="calc.js"></script>
-
 </body>
 </html>
-
