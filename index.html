@@ -24,9 +24,59 @@
         <small>⭐ 별과바다 부족 ⭐</small><br>
         <small>문의는 라프땅에게</small>
 
-        <div class="coming">
-            계산기 로딩 준비중...
-        </div>
+<div class="calc-container">
+
+    <!-- 펫 이름 선택 -->
+    <label>페트이름</label>
+    <input list="pet-list" id="pet-name" placeholder="페트 선택">
+    <datalist id="pet-list"></datalist>
+
+    <!-- 초기치 입력 -->
+    <div class="stat-row">
+        <span>내구력</span>
+        <button onclick="changeStat('hp',-1)">-</button>
+        <input type="number" id="hp" value="0">
+        <button onclick="changeStat('hp',1)">+</button>
+    </div>
+
+    <div class="stat-row">
+        <span>공격력</span>
+        <button onclick="changeStat('atk',-1)">-</button>
+        <input type="number" id="atk" value="0">
+        <button onclick="changeStat('atk',1)">+</button>
+    </div>
+
+    <div class="stat-row">
+        <span>방어력</span>
+        <button onclick="changeStat('def',-1)">-</button>
+        <input type="number" id="def" value="0">
+        <button onclick="changeStat('def',1)">+</button>
+    </div>
+
+    <div class="stat-row">
+        <span>순발력</span>
+        <button onclick="changeStat('agi',-1)">-</button>
+        <input type="number" id="agi" value="0">
+        <button onclick="changeStat('agi',1)">+</button>
+    </div>
+
+    <!-- 계산 버튼 -->
+    <button class="calc-btn" onclick="runCalc()">계산하기</button>
+
+    <!-- 우수확률 표시 -->
+    <div class="excellent-box">
+        <h3>⭐ 우수확률 ⭐</h3>
+        <div id="excellent-rate">계산 전</div>
+    </div>
+
+    <!-- 숨김 영역 (pet.js 엔진 출력용) -->
+    <div style="display:none;">
+        <input type="hidden" id="name">
+        <div id="myPet"><table><tbody></tbody></table></div>
+        <div id="result"><table><tbody></tbody></table></div>
+    </div>
+
+</div>
     </section>
 
     <!-- 중앙 추적기 영역 -->
@@ -54,4 +104,5 @@
 <script src="calc.js"></script>
 </body>
 </html>
+
 
