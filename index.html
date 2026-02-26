@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라프땅의 놀이터</title>
+<title>별바 계산기</title>
 
 <link rel="stylesheet" href="dark.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -13,6 +13,7 @@
 
 <header class="top-header">
     <h1>🎲 별바 계산기 🎲</h1>
+    <div class="subtitle">⭐ 별과바다 부족 ⭐</div>
 </header>
 
 <main class="layout">
@@ -21,12 +22,10 @@
 
 <label>페트 이름</label>
 <div class="autocomplete">
-
 <div class="search-row">
 <input type="text" id="pet-search" placeholder="펫 이름 입력">
 <button id="open-list">▼</button>
 </div>
-
 <div id="suggestions"></div>
 <div id="all-pet-list" class="petlist"></div>
 </div>
@@ -64,13 +63,12 @@
 
 <div id="myPet"><table><tbody></tbody></table></div>
 <div id="result"><table><tbody></tbody></table></div>
-
 <div id="srank-label"></div>
 
 <button id="search"></button>
 <button id="calculate"></button>
-
 <div id="result-master-container"></div>
+
 </div>
 
 <script>
@@ -86,7 +84,7 @@ window.alert=function(){};
 
 <script src="pet.js"></script>
 
-<!-- 원본 엔진 이벤트 이식 -->
+<!-- 원본 이벤트 이식 -->
 <script>
 $(document).ready(function(){
 
