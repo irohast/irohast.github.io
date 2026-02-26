@@ -78,12 +78,13 @@ body{
 .stat-row{
     display:flex;
     align-items:center;
-    justify-content:space-between;
+    gap:8px;
     margin-bottom:10px;
 }
 
 .stat-row span{
     width:80px;
+    flex-shrink:0;
 }
 
 .stat-row input{
@@ -149,3 +150,4 @@ body{
     height:40px;
     font-size:18px;
 }
+
