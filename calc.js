@@ -20,6 +20,34 @@ function initPetSelector(){
         option.value = p.name;
         list.appendChild(option);
     });
+
+    /* ★ 이름 선택 시 S초기치 자동 입력 */
+    input.addEventListener("change", autoFillStat);
+}
+
+/* S초기치 자동입력 */
+function autoFillStat(){
+    const name=document.getElementById("pet-name").value;
+    const found=petList.find(p=>p.name===name);
+    if(!found) return;
+
+    btnName="search";
+
+    $("#name").val(name);
+
+    const copiedPet = JSON.parse(JSON.stringify(found));
+    setSRank(copiedPet);
+
+    /* S초기치 결과 읽어서 입력칸에 넣기 */
+    setTimeout(()=>{
+        const cells=$("#myPet tbody tr:first td");
+        if(cells.length>=5){
+            $("#hp").val(parseInt(cells.eq(1).text()));
+            $("#atk").val(parseInt(cells.eq(2).text()));
+            $("#def").val(parseInt(cells.eq(3).text()));
+            $("#agi").val(parseInt(cells.eq(4).text()));
+        }
+    },200);
 }
 
 /* + - 버튼 */
@@ -42,7 +70,6 @@ function runCalc(){
         return;
     }
 
-    /* pet.js가 사용하는 방식 그대로 실행 */
     btnName="calculate";
 
     $("#name").val(name);
@@ -55,11 +82,21 @@ function runCalc(){
     setSRank(copiedPet);
     setBase(found);
 
-    /* 우수확률 추출 */
     setTimeout(()=>{
         const label=document.getElementById("srank-label");
         if(label){
             document.getElementById("excellent-rate").innerHTML=label.innerText;
         }
     },300);
+}
+.stat-row input{
+    width:110px;
+    height:40px;
+    font-size:16px;
+}
+
+.stat-row button{
+    width:42px;
+    height:40px;
+    font-size:18px;
 }
