@@ -13,29 +13,47 @@
 
 <header class="top-header">
     <h1>라프땅의 놀이터</h1>
-    <p class="subtitle">⭐ 별과바다 부족 전용 ⭐</p>
+    <p class="subtitle">⭐ 별과바다 부족 전용 도구 사이트 ⭐</p>
 </header>
 
 <main class="layout">
 
-<section class="panel">
+<!-- 왼쪽 패널 : 계산기 -->
+<section class="panel" id="left-panel">
 
-<h2>펫 계산기</h2>
+<h2>🎲 별바 계산기 🎲</h2>
 
-<label>페트 선택</label>
-<select id="pet-name"></select>
+<label>페트 이름</label>
+<div class="autocomplete">
+<input type="text" id="pet-search" placeholder="펫 이름 입력">
+<div id="suggestions"></div>
+</div>
 
-<div class="stat">
-내구 <input id="hp" type="number">
-공격 <input id="atk" type="number">
-방어 <input id="def" type="number">
-순발 <input id="agi" type="number">
+<div class="stat-row">
+<span>내구력</span>
+<input type="number" id="hp">
+</div>
+
+<div class="stat-row">
+<span>공격력</span>
+<input type="number" id="atk">
+</div>
+
+<div class="stat-row">
+<span>방어력</span>
+<input type="number" id="def">
+</div>
+
+<div class="stat-row">
+<span>순발력</span>
+<input type="number" id="agi">
 </div>
 
 <button id="run-btn">계산하기</button>
 
-<div class="result-box">
-<div id="rate">우수확률 : 대기중</div>
+<div class="excellent-box">
+<h3>⭐ 우수확률 ⭐</h3>
+<div id="excellent-rate">대기중</div>
 <div id="s-init"></div>
 <div id="s-grow"></div>
 </div>
@@ -47,16 +65,33 @@
 
 </section>
 
+<!-- 가운데 패널 -->
+<section class="panel">
+<h2>📊 성장 추적기</h2>
+<div class="coming">준비중</div>
+</section>
+
+<!-- 오른쪽 패널 -->
+<section class="panel">
+<h2>📈 성장 그래프</h2>
+<div class="coming">준비중</div>
+</section>
+
 </main>
 
-
-<!-- ================= 엔진 영역 (절대 건드리지 말것) ================= -->
+<!-- ===== 엔진용 숨김 영역 (절대 삭제 금지) ===== -->
 <div style="display:none">
 
 <input id="name">
 
-<div id="myPet"><table><tbody></tbody></table></div>
-<div id="result"><table><tbody></tbody></table></div>
+<div id="myPet">
+<table><tbody></tbody></table>
+</div>
+
+<div id="result">
+<table><tbody></tbody></table>
+</div>
+
 <div id="srank-label"></div>
 
 <button id="search"></button>
@@ -73,6 +108,33 @@ var result=[];
 </script>
 
 <script src="pet.js"></script>
+
+<!-- 🔴 원본 index.html의 실제 엔진 이벤트 이식 -->
+<script>
+$(document).ready(function(){
+
+    $("#search, #calculate").on("click", function(){
+
+        if(pet.length===0) return;
+
+        const foundPet = pet.find(p => p.name === $("#name").val());
+        if(!foundPet) return;
+
+        btnName=this.id;
+
+        const copiedPet=JSON.parse(JSON.stringify(foundPet));
+
+        $("#myPet tbody").empty();
+        $("#result tbody").empty();
+        result.length=0;
+
+        setSRank(copiedPet);
+        setBase(foundPet);
+    });
+
+});
+</script>
+
 <script src="calc.js"></script>
 
 </body>
