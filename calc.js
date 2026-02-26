@@ -10,33 +10,35 @@ fetch("pets.json")
 
 /* 이름 선택 목록 생성 */
 function initPetSelector(){
-    const input = document.getElementById("pet-name");
-    const list = document.getElementById("pet-list");
+    const select = document.getElementById("pet-name");
 
-    list.innerHTML = "";
+    select.innerHTML = '<option value="">페트 선택</option>';
 
     petList.forEach(p=>{
         const option = document.createElement("option");
         option.value = p.name;
-        list.appendChild(option);
+        option.textContent = p.name;
+        select.appendChild(option);
     });
 
-    /* ★ 이름 선택 시 S초기치 자동 입력 */
-    input.addEventListener("change", autoFillStat);
+    select.addEventListener("change", autoFillStat);
 }
 
+/* S초기치 자동입력 */
 /* S초기치 자동입력 */
 function autoFillStat(){
     const name=document.getElementById("pet-name").value;
     const found=petList.find(p=>p.name===name);
     if(!found) return;
 
-    btnName="search";
+    // ★ pet.js 엔진 검색모드 시동
+    btnName = "search";
+    document.getElementById("name").value = name;
 
-    $("#name").val(name);
+    // 엔진 실행
+    setSRank(found);
+    setBase(found);
 
-    const copiedPet = JSON.parse(JSON.stringify(found));
-    setSRank(copiedPet);
 
     /* S초기치 결과 읽어서 입력칸에 넣기 */
     setTimeout(()=>{
@@ -100,3 +102,4 @@ function runCalc(){
     height:40px;
     font-size:18px;
 }
+
