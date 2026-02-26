@@ -66,8 +66,8 @@ body{
     right:6px;
     top:15%;
     transform:translateY(-50%);
-    width:28px;
-    height:28px;
+    width:30px;
+    height:30px;
     border:none;
     background:#374151;
     color:#facc15;
@@ -153,6 +153,7 @@ button{
     text-align:center;
     color:#9ca3af;
 }
+
 
 
 
