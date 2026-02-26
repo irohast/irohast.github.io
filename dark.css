@@ -1,117 +1,171 @@
 body{
-margin:0;
-font-family:'Noto Sans KR',sans-serif;
-background: radial-gradient(circle at top,#0b1020,#05070f 70%);
-color:#e5e7eb;
+    margin:0;
+    font-family:'Noto Sans KR',sans-serif;
+    background: radial-gradient(circle at top,#0b1020,#05070f 70%);
+    color:#e5e7eb;
 }
 
+/* ===== 헤더 ===== */
 .top-header{
-text-align:center;
-padding:30px 10px 10px;
+    text-align:center;
+    padding:30px 10px 10px;
 }
 
 .top-header h1{
-margin:0;
-font-size:34px;
-color:#facc15;
+    margin:0;
+    font-size:34px;
+    color:#facc15;
 }
 
 .subtitle{
-color:#9ca3af;
+    color:#9ca3af;
 }
 
+/* ===== 3패널 레이아웃 ===== */
 .layout{
-display:grid;
-grid-template-columns:1fr 1fr 1fr;
-gap:20px;
-padding:20px;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:20px;
+    padding:20px;
 }
 
 .panel{
-background:#111827;
-border:1px solid #374151;
-border-radius:14px;
-padding:20px;
-min-height:520px;
-box-shadow:0 0 25px rgba(0,0,0,0.6);
+    background:#111827;
+    border:1px solid #374151;
+    border-radius:14px;
+    padding:20px;
+    min-height:520px;
+    box-shadow:0 0 25px rgba(0,0,0,0.6);
 }
 
-.stat-row{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin:10px 0;
-}
-
-.stat-row input{
-width:120px;
-padding:8px;
-background:#1f2937;
-border:1px solid #374151;
-color:white;
-border-radius:6px;
-}
-
-button{
-width:100%;
-padding:12px;
-margin-top:15px;
-background:#facc15;
-border:none;
-border-radius:8px;
-font-weight:bold;
-cursor:pointer;
-}
-
+/* ===== 검색 영역 ===== */
 .autocomplete{
-position:relative;
+    position:relative;   /* 🔴 드롭다운 기준점 */
+    margin-bottom:15px;
+}
+
+.search-row{
+    display:flex;
+    gap:6px;
+}
+
+#pet-search{
+    flex:1;
+    padding:8px;
+    background:#1f2937;
+    border:1px solid #374151;
+    color:white;
+    border-radius:6px;
+}
+
+#open-list{
+    width:42px;
+    padding:0;
+    font-size:18px;
+    background:#374151;
+    border:none;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+#open-list:hover{
+    background:#4b5563;
+}
+
+/* ===== 자동완성 + 전체목록 ===== */
+#suggestions,
+.petlist{
+    position:absolute;
+    background:#020617;
+    width:100%;
+    border:1px solid #374151;
+    max-height:260px;
+    overflow-y:auto;
+    z-index:20;
 }
 
 #suggestions{
-position:absolute;
-background:#020617;
-width:100%;
-border:1px solid #374151;
-max-height:200px;
-overflow-y:auto;
-z-index:10;
+    top:44px;
 }
 
-.suggest-item{
-padding:8px;
-cursor:pointer;
+.petlist{
+    top:44px;
+    display:none;
 }
 
-.suggest-item:hover{
-background:#374151;
+.suggest-item,
+.pet-item{
+    padding:8px;
+    cursor:pointer;
+    border-bottom:1px solid #1f2937;
 }
 
+.suggest-item:hover,
+.pet-item:hover{
+    background:#374151;
+}
+
+/* ===== 능력치 입력 ===== */
+.stat-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:10px 0;
+}
+
+.stat-row input{
+    width:120px;
+    padding:8px;
+    background:#1f2937;
+    border:1px solid #374151;
+    color:white;
+    border-radius:6px;
+}
+
+/* ===== 계산 버튼 ===== */
+button{
+    width:100%;
+    padding:12px;
+    margin-top:15px;
+    background:#facc15;
+    border:none;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#fde047;
+}
+
+/* ===== 결과 박스 ===== */
 .excellent-box{
-margin-top:20px;
-padding:15px;
-background:#0f172a;
-border:1px solid #facc15;
-border-radius:10px;
-text-align:center;
+    margin-top:20px;
+    padding:15px;
+    background:#0f172a;
+    border:1px solid #facc15;
+    border-radius:10px;
+    text-align:center;
 }
 
 .top10{
-margin-top:20px;
-max-height:240px;
-overflow-y:auto;
-background:#020617;
-padding:10px;
-border-radius:10px;
+    margin-top:20px;
+    max-height:240px;
+    overflow-y:auto;
+    background:#020617;
+    padding:10px;
+    border-radius:10px;
 }
 
 .row{
-padding:6px;
-border-bottom:1px solid #374151;
-font-size:13px;
+    padding:6px;
+    border-bottom:1px solid #374151;
+    font-size:13px;
 }
 
 .coming{
-margin-top:40px;
-text-align:center;
-color:#9ca3af;
+    margin-top:40px;
+    text-align:center;
+    color:#9ca3af;
 }
