@@ -25,8 +25,14 @@
 
 <label>페트 이름</label>
 <div class="autocomplete">
+
+<div class="search-row">
 <input type="text" id="pet-search" placeholder="펫 이름 입력">
+<button id="open-list">▼</button>
+</div>
+
 <div id="suggestions"></div>
+<div id="all-pet-list" class="petlist"></div>
 </div>
 
 <div class="stat-row">
@@ -139,3 +145,4 @@ $(document).ready(function(){
 
 </body>
 </html>
+
