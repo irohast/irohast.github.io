@@ -12,80 +12,65 @@
 
 <style>
 body{
-    background:linear-gradient(90deg,#0f1d1b,#142b28,#0f1d1b);
+    background:linear-gradient(180deg,#0e1917,#142623,#0e1917);
     font-family:'Malgun Gothic';
-    color:#e6fff2;
+    color:#e8fdf5;
 }
 
-/* 좌측 카드 */
+/* 좌측 영역 */
 .container{
-    max-width:420px;
-    margin-left:60px;
+    max-width:460px;
+    margin-left:70px;
     margin-top:40px;
 }
 
 .title{
     text-align:center;
-    margin:20px 0;
+    margin:30px 0 20px;
+}
+.title small{
+    color:#ffd86b;
+    font-weight:bold;
 }
 
 .card{
     background:#1b1f1d;
     border-radius:18px;
-    box-shadow:0 0 20px rgba(0,0,0,0.5);
+    box-shadow:0 6px 20px rgba(0,0,0,0.5);
     padding:20px;
-    position:relative;
+    margin-bottom:20px;
 }
 
-/* 입력 + 확률 가로배치 */
+/* 능력치 한줄 배치 */
 .stat-row{
     display:grid;
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:repeat(4,1fr);
     gap:10px;
 }
-.stat-row input{
-    width:55%;
+
+.stat-box label{
+    font-size:13px;
+    margin-bottom:3px;
 }
 
-/* 확률 패널 */
-#probabilityPanel{
-    position:absolute;
-    left:460px;
-    top:240px;
-    width:260px;
-    text-align:center;
-}
-.prob-title{
-    font-size:24px;
-}
-#probValue{
-    font-size:42px;
-    color:#27d36b;
-    font-weight:bold;
+.stat-box input{
+    width:100%;
+    background:#101413;
+    border:1px solid #3a4a45;
+    color:#e8fdf5;
 }
 
-/* 결과표 숨김 (엔진은 사용하지만 UI는 안씀) */
-#myPet, #result-master-container{
-    display:none !important;
+/* ▼ 버튼만 사용 */
+.input-group .btn-info{
+    display:none;
 }
 
-/* 버튼 */
-.btn-main{
-    background:#5f5a50;
-    border:none;
-    height:50px;
-    font-size:18px;
-}
-.btn-main:hover{
-    background:#7a7468;
-}
-
-/* 자동완성 */
+/* 자동완성 목록 */
 #pet-suggestions{
     list-style:none;
     padding:0;
     margin-top:5px;
-    border:1px solid #444;
+    border:1px solid #3a4a45;
     border-radius:8px;
     max-height:260px;
     overflow-y:auto;
@@ -100,6 +85,43 @@ body{
 #pet-suggestions li:hover{
     background:#2d3a34;
     cursor:pointer;
+}
+
+/* 우수확률 표시 영역 */
+#probabilityPanel{
+    position:fixed;
+    left:560px;
+    top:260px;
+    width:260px;
+    text-align:center;
+}
+
+#probTitle{
+    font-size:24px;
+    margin-bottom:10px;
+}
+
+#probValue{
+    font-size:46px;
+    color:#27d36b;
+    font-weight:bold;
+}
+
+/* 계산 버튼 */
+.btn-main{
+    background:#5c564c;
+    border:none;
+    color:white;
+    height:50px;
+    font-size:18px;
+}
+.btn-main:hover{
+    background:#787164;
+}
+
+#result-wrapper{
+    max-height:400px;
+    overflow-y:auto;
 }
 </style>
 
@@ -123,7 +145,6 @@ body{
 <input type="text" class="form-control" id="name" autocomplete="off">
 
 <span class="input-group-btn">
-<button class="btn btn-info" id="search">검색</button>
 <button class="btn btn-default" id="showAll">▼</button>
 </span>
 
@@ -134,22 +155,22 @@ body{
 <hr>
 
 <div class="stat-row">
-<div>
+<div class="stat-box">
 <label>내구</label>
 <input type="number" id="hp" class="form-control">
 </div>
 
-<div>
+<div class="stat-box">
 <label>공격</label>
 <input type="number" id="atk" class="form-control">
 </div>
 
-<div>
+<div class="stat-box">
 <label>방어</label>
 <input type="number" id="def" class="form-control">
 </div>
 
-<div>
+<div class="stat-box">
 <label>순발</label>
 <input type="number" id="agi" class="form-control">
 </div>
@@ -159,12 +180,68 @@ body{
 <button id="calculate" class="btn btn-main btn-block">결과 계산하기</button>
 
 </div>
+
+<!-- S초기치 / 성장률 표 (절대 삭제하면 계산 멈춤) -->
+
+<div class="card" id="myPet" style="display:none;">
+<table class="table table-bordered">
+<thead>
+<tr>
+<th>구분</th>
+<th>내구</th>
+<th>공격</th>
+<th>방어</th>
+<th>순발</th>
+<th>합</th>
+</tr>
+</thead>
+<tbody>
+<tr class="srank">
+<td id="srank-label">S 초기치</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="srank">
+<td>S 성장률</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 
-<!-- 확률 -->
+<!-- 결과 분포표 (엔진용, 화면엔 아래로 스크롤됨) -->
+
+<div class="card" id="result-master-container" style="display:none;">
+<div id="result-wrapper">
+<table class="table table-striped" id="result">
+<thead>
+<tr>
+<th>번호</th>
+<th>등급</th>
+<th>내구</th>
+<th>공격</th>
+<th>방어</th>
+<th>순발</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<!-- 우수확률 표시 -->
 
 <div id="probabilityPanel">
-<div class="prob-title">우수확률은 ?</div>
+<div id="probTitle">우수확률은 ?</div>
 <div id="probValue">--%</div>
 </div>
 
@@ -218,7 +295,7 @@ $(document).ready(function() {
     $(document).on("mousedown", "#pet-suggestions li", function(){
         $("#name").val($(this).text());
         $("#pet-suggestions").hide();
-        $("#search").click();
+        $("#calculate").click();
     });
 
     $(document).click(function(e){
@@ -227,13 +304,14 @@ $(document).ready(function() {
         }
     });
 
-    $("#search, #calculate").on("click", function() {
+    $("#calculate").on("click", function() {
         if (pet.length === 0) return;
 
         const foundPet = pet.find(p => p.name === $("#name").val());
         if (!foundPet) { alert("페트 정보를 찾을 수 없습니다."); return; }
 
-        btnName = this.id;
+        $("#result-master-container").show();
+        btnName = "calculate";
 
         const copiedPet = JSON.parse(JSON.stringify(foundPet));
         setSRank(copiedPet);
