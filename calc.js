@@ -1,31 +1,28 @@
-let petData = [];
+let petData=[];
 
-/* ================= 펫 데이터 로드 ================= */
 fetch("pets.json")
-.then(r => r.json())
-.then(data => {
-    pet = JSON.parse(JSON.stringify(data)); // 엔진용
-    petData = data; // UI용
+.then(r=>r.json())
+.then(data=>{
+    pet=JSON.parse(JSON.stringify(data));
+    petData=data;
 });
 
+const searchInput=document.getElementById("pet-search");
+const suggestionBox=document.getElementById("suggestions");
+const allList=document.getElementById("all-pet-list");
+const openBtn=document.getElementById("open-list");
 
-/* ================= 자동완성 검색 ================= */
-const searchInput = document.getElementById("pet-search");
-const suggestionBox = document.getElementById("suggestions");
-const allList = document.getElementById("all-pet-list");
-const openBtn = document.getElementById("open-list");
+/* 자동완성 */
+searchInput.addEventListener("input",function(){
 
-/* 타이핑 자동완성 */
-searchInput.addEventListener("input", function(){
-
-    const value = this.value.trim();
-    suggestionBox.innerHTML = "";
+    const value=this.value.trim();
+    suggestionBox.innerHTML="";
     allList.style.display="none";
 
     if(!value) return;
 
-    const filtered = petData
-        .filter(p => p.name.includes(value))
+    const filtered=petData
+        .filter(p=>p.name.includes(value))
         .sort((a,b)=>a.name.localeCompare(b.name,'ko'))
         .slice(0,15);
 
@@ -44,10 +41,8 @@ searchInput.addEventListener("input", function(){
     });
 });
 
-
-/* ================= ▼ 전체 펫 목록 ================= */
+/* ▼ 전체 목록 */
 openBtn.onclick=()=>{
-
     if(allList.style.display==="block"){
         allList.style.display="none";
         return;
@@ -75,8 +70,7 @@ openBtn.onclick=()=>{
     allList.style.display="block";
 };
 
-
-/* ================= 검색 실행 (S초기치 생성) ================= */
+/* 검색 실행 */
 async function startSearch(name){
 
     document.getElementById("name").value=name;
@@ -88,49 +82,45 @@ async function startSearch(name){
 
     const td=$("#myPet tbody tr:first td");
 
-    $("#hp").val(parseInt(td.eq(1).text()));
-    $("#atk").val(parseInt(td.eq(2).text()));
-    $("#def").val(parseInt(td.eq(3).text()));
-    $("#agi").val(parseInt(td.eq(4).text()));
+    $("#hp").val(parseFloat(td.eq(1).text()));
+    $("#atk").val(parseFloat(td.eq(2).text()));
+    $("#def").val(parseFloat(td.eq(3).text()));
+    $("#agi").val(parseFloat(td.eq(4).text()));
 
     $("#s-init").text(
         `S초기치 : ${td.eq(1).text()} / ${td.eq(2).text()} / ${td.eq(3).text()} / ${td.eq(4).text()}`
     );
 }
 
+/* 계산 */
+document.getElementById("run-btn").addEventListener("click",async function(){
 
-/* ================= 계산 ================= */
-document.getElementById("run-btn").addEventListener("click", async function(){
-
-    const name = searchInput.value.trim();
-    if(!name){
-        alert("펫 이름을 입력하세요");
-        return;
-    }
+    const name=searchInput.value.trim();
+    if(!name){alert("펫 이름 입력");return;}
 
     document.getElementById("name").value=name;
     btnName="calculate";
 
     $("#calculate").trigger("click");
 
-    /* 확률 생성 대기 */
     await waitFor(()=>$("#srank-label").text().length>0,6000);
 
     const text=$("#srank-label").text();
     const m=text.match(/\((.*?)\)/);
 
-    if(m) $("#excellent-rate").text(m[1].trim()+"%");
-    else $("#excellent-rate").text("계산 실패");
+    if(m){
+        const rate=m[1].replace('%','').trim();
+        $("#excellent-rate").text(rate+"%");
+        $("#srank-label").text("");
+    }else{
+        $("#excellent-rate").text("계산 실패");
+    }
 
-
-    /* S성장률 표시 */
     const grow=$("#myPet tbody tr").eq(1).find("td");
     $("#s-grow").text(
         `S성장률 : ${grow.eq(1).text()} / ${grow.eq(2).text()} / ${grow.eq(3).text()} / ${grow.eq(4).text()}`
     );
 
-
-    /* 결과 생성 대기 */
     await waitFor(()=>$("#result tbody tr").length>0,6000);
 
     const rows=$("#result tbody tr");
@@ -138,20 +128,21 @@ document.getElementById("run-btn").addEventListener("click", async function(){
 
     rows.each(function(){
 
-        const rank=$(this).find("td").eq(1).text().trim();
-
-        /* 8등급만 표시 */
+        const tds=$(this).find("td");
+        const rank=tds.eq(1).text().trim();
         if(rank!=="8") return;
 
-        let txt=$(this).text();
+        let hp=tds.eq(2).text();
+        let atk=tds.eq(3).text();
+        let def=tds.eq(4).text();
+        let agi=tds.eq(5).text();
 
-        /* [2] 제거 */
-        txt=txt.replace(/\[\d+\]/g,"");
+        hp=hp.replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
+        atk=atk.replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
+        def=def.replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
+        agi=agi.replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
 
-        /* (2) 제거 */
-        txt=txt.replace(/\(\d+\)/g,"");
-
-        html+=`<div class="row">${txt}</div>`;
+        html+=`<div class="row">${hp} / ${atk} / ${def} / ${agi}</div>`;
     });
 
     if(html==="") html="<div class='row'>8등급 결과 없음</div>";
@@ -159,8 +150,6 @@ document.getElementById("run-btn").addEventListener("click", async function(){
     $("#top10-list").html(html);
 });
 
-
-/* ================= 대기 함수 ================= */
 function waitFor(cond,timeout){
 return new Promise((resolve,reject)=>{
     const start=Date.now();
