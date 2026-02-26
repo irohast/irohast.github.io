@@ -11,8 +11,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 </head>
-
-</head>
 <body>
 
 <header class="top-header">
@@ -32,8 +30,9 @@
 
     <!-- 펫 이름 선택 -->
     <label>페트이름</label>
-    <input list="pet-list" id="pet-name" placeholder="페트 선택">
-    <datalist id="pet-list"></datalist>
+<select id="pet-name">
+    <option value="">페트 선택</option>
+</select>
 
     <!-- 초기치 입력 -->
     <div class="stat-row">
@@ -108,6 +107,7 @@
 <script src="calc.js"></script>
 </body>
 </html>
+
 
 
 
