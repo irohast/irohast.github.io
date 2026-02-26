@@ -25,83 +25,68 @@ function initPetSelector(){
 }
 
 /* S초기치 자동입력 */
-/* S초기치 자동입력 */
 function autoFillStat(){
-    const name=document.getElementById("pet-name").value;
-    const found=petList.find(p=>p.name===name);
+    const name = document.getElementById("pet-name").value;
+    const found = petList.find(p=>p.name===name);
     if(!found) return;
 
-    // ★ pet.js 엔진 검색모드 시동
     btnName = "search";
     document.getElementById("name").value = name;
 
-    // 엔진 실행
     setSRank(found);
     setBase(found);
 
-
-    /* S초기치 결과 읽어서 입력칸에 넣기 */
     setTimeout(()=>{
-        const cells=$("#myPet tbody tr:first td");
-        if(cells.length>=5){
-            $("#hp").val(parseInt(cells.eq(1).text()));
-            $("#atk").val(parseInt(cells.eq(2).text()));
-            $("#def").val(parseInt(cells.eq(3).text()));
-            $("#agi").val(parseInt(cells.eq(4).text()));
+        const cells = $("#myPet tbody tr:first td");
+        if(cells.length >= 5){
+            document.getElementById("hp").value  = parseInt(cells.eq(1).text());
+            document.getElementById("atk").value = parseInt(cells.eq(2).text());
+            document.getElementById("def").value = parseInt(cells.eq(3).text());
+            document.getElementById("agi").value = parseInt(cells.eq(4).text());
         }
     },200);
 }
 
 /* + - 버튼 */
 function changeStat(stat,delta){
-    const el=document.getElementById(stat);
-    let v=parseInt(el.value)||0;
-    v+=delta;
-    if(v<0)v=0;
-    el.value=v;
+    const el = document.getElementById(stat);
+    let v = parseInt(el.value)||0;
+    v += delta;
+    if(v < 0) v = 0;
+    el.value = v;
 }
 
 /* 계산 버튼 */
 function runCalc(){
 
-    const name=document.getElementById("pet-name").value;
-    const found=petList.find(p=>p.name===name);
+    const name = document.getElementById("pet-name").value;
+    const found = petList.find(p=>p.name===name);
 
     if(!found){
         alert("페트를 선택해주세요");
         return;
     }
 
-btnName="calculate";
+    btnName = "calculate";
 
-document.getElementById("name").value = name;
+    // 엔진이 읽는 hidden name 값 세팅
+    document.getElementById("name").value = name;
 
-document.getElementById("hp").value = parseInt(document.getElementById("hp").value||0);
-document.getElementById("atk").value = parseInt(document.getElementById("atk").value||0);
-document.getElementById("def").value = parseInt(document.getElementById("def").value||0);
-document.getElementById("agi").value = parseInt(document.getElementById("agi").value||0);
+    // 입력된 현재 스탯 그대로 유지 (엔진이 직접 읽음)
+    setSRank(found);
+    setBase(found);
 
-setSRank(found);
-setBase(found);
+    setTimeout(()=>{
+        const label = document.getElementById("srank-label");
+        if(!label) return;
 
-setTimeout(()=>{
-    const label = document.getElementById("srank-label");
-    if(!label) return;
+        const txt = label.innerText;
+        const match = txt.match(/\((.*?)\)/);
 
-    // "(8등급: xx.xx%)" 부분만 추출
-    const txt = label.innerText;
-    const match = txt.match(/\((.*?)\)/);
-
-    if(match){
-        document.getElementById("excellent-rate").innerText = "우수확률 : " + match[1];
-    }else{
-        document.getElementById("excellent-rate").innerText = "계산 실패";
-    }
-},400);
+        if(match){
+            document.getElementById("excellent-rate").innerText = "우수확률 : " + match[1];
+        }else{
+            document.getElementById("excellent-rate").innerText = "우수확률 계산 실패";
+        }
+    },400);
 }
-
-
-
-
-
-
