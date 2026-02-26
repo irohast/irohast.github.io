@@ -171,3 +171,32 @@ function limitDecimalPlaces(number, places) {
 function preciseRound(num) {
     return Math.round(num * 1e12) / 1e12;
 }
+// ===== 8등급 확률 표시 기능 추가 =====
+
+// 기존 print 함수 후킹
+const originalPrint = print;
+
+print = function() {
+originalPrint();
+
+```
+// 전체 경우의 수
+const total = result.length;
+
+if(total === 0){
+    document.getElementById("probValue").innerText = "0%";
+    return;
+}
+
+// 8등급 개수
+let grade8 = 0;
+for(let i=0;i<result.length;i++){
+    if(result[i].rank == 8) grade8++;
+}
+
+const percent = ((grade8 / total) * 100).toFixed(2);
+document.getElementById("probValue").innerText = percent + "%";
+```
+
+};
+
