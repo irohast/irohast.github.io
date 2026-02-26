@@ -1,112 +1,108 @@
-let petList = [];
+let petData=[];
 
-/* 펫 데이터 로드 */
+/* 펫 로드 */
 fetch("pets.json")
-.then(res => res.json())
-.then(data => {
+.then(r=>r.json())
+.then(data=>{
+    pet = JSON.parse(JSON.stringify(data));
+    petData=data;
 
-```
-/* ★★★★★ 핵심 : pet.js 엔진용 전역 데이터 주입 ★★★★★ */
-pet = JSON.parse(JSON.stringify(data));
+    const sel=document.getElementById("pet-name");
+    sel.innerHTML="<option value=''>선택</option>";
 
-petList = data.sort((a,b)=>a.name.localeCompare(b.name,'ko'));
-initPetSelector();
-```
-
+    data.sort((a,b)=>a.name.localeCompare(b.name,'ko'))
+    .forEach(p=>{
+        const o=document.createElement("option");
+        o.value=p.name;
+        o.textContent=p.name;
+        sel.appendChild(o);
+    });
 });
 
-/* 이름 선택 목록 생성 */
-function initPetSelector(){
-const select = document.getElementById("pet-name");
+/* ===== S초기치 자동 입력 ===== */
+document.getElementById("pet-name").addEventListener("change",async function(){
 
-```
-select.innerHTML = '<option value="">페트 선택</option>';
+    const name=this.value;
+    if(!name) return;
 
-petList.forEach(p=>{
-    const option = document.createElement("option");
-    option.value = p.name;
-    option.textContent = p.name;
-    select.appendChild(option);
+    document.getElementById("name").value=name;
+
+    btnName="search";
+
+    /* 핵심 : 실제 사용자처럼 클릭 이벤트 발생 */
+    $("#search").trigger("click");
+
+    /* 엔진 완료 대기 */
+    await waitFor(()=>$("#myPet tbody tr").length>0,3000);
+
+    const td=$("#myPet tbody tr:first td");
+
+    $("#hp").val(parseInt(td.eq(1).text()));
+    $("#atk").val(parseInt(td.eq(2).text()));
+    $("#def").val(parseInt(td.eq(3).text()));
+    $("#agi").val(parseInt(td.eq(4).text()));
+
+    /* S초기치 표시 */
+    $("#s-init").text(
+        `S초기치 : ${td.eq(1).text()} / ${td.eq(2).text()} / ${td.eq(3).text()} / ${td.eq(4).text()}`
+    );
 });
 
-select.addEventListener("change", autoFillStat);
-```
 
-}
+/* ===== 계산 ===== */
+document.getElementById("run-btn").addEventListener("click",async function(){
 
-/* S초기치 자동입력 */
-function autoFillStat(){
+    const name=$("#pet-name").val();
+    if(!name){alert("펫 선택");return;}
 
-```
-const name = document.getElementById("pet-name").value;
-const found = pet.find(p=>p.name===name);
-if(!found) return;
+    $("#name").val(name);
+    btnName="calculate";
 
-/* pet.js가 실제로 쓰는 트리거 상태 */
-btnName = "search";
-document.getElementById("name").value = name;
+    $("#calculate").trigger("click");
 
-/* ★ 버튼 클릭을 강제로 발생시킴 (원본 동작 모방) */
-document.getElementById("search").click();
+    await waitFor(()=>$("#srank-label").text().length>0,6000);
 
-/* 결과 읽어서 입력칸 채우기 */
-setTimeout(()=>{
-    const cells = $("#myPet tbody tr:first td");
+    /* 우수확률 */
+    const text=$("#srank-label").text();
+    const m=text.match(/\((.*?)\)/);
 
-    if(cells.length >= 5){
-        document.getElementById("hp").value  = parseInt(cells.eq(1).text());
-        document.getElementById("atk").value = parseInt(cells.eq(2).text());
-        document.getElementById("def").value = parseInt(cells.eq(3).text());
-        document.getElementById("agi").value = parseInt(cells.eq(4).text());
-    }
-},600);
-```
+    if(m) $("#rate").text("우수확률 : "+m[1]+"%");
+    else $("#rate").text("계산 실패");
 
-}
 
-/* + - 버튼 */
-function changeStat(stat,delta){
-const el = document.getElementById(stat);
-let v = parseInt(el.value)||0;
-v += delta;
-if(v < 0) v = 0;
-el.value = v;
-}
+    /* S성장률 표시 */
+    const grow=$("#myPet tbody tr").eq(1).find("td");
+    $("#s-grow").text(
+        `S성장률 : ${grow.eq(1).text()} / ${grow.eq(2).text()} / ${grow.eq(3).text()} / ${grow.eq(4).text()}`
+    );
 
-/* 계산 버튼 */
-function runCalc(){
+    /* TOP10 표시 */
+    await waitFor(()=>$("#result tbody tr").length>0,6000);
 
-```
-const name = document.getElementById("pet-name").value;
-if(!name){
-    alert("페트를 선택해주세요");
-    return;
-}
+    const rows=$("#result tbody tr");
+    let html="";
 
-btnName = "calculate";
-document.getElementById("name").value = name;
-
-/* ★ 실제 계산 트리거 */
-document.getElementById("calculate").click();
-
-/* 결과 읽기 */
-setTimeout(()=>{
-    const label = document.getElementById("srank-label");
-
-    if(!label){
-        document.getElementById("excellent-rate").innerText="계산 실패";
-        return;
+    for(let i=0;i<Math.min(10,rows.length);i++){
+        html+="<div class='row'>"+$(rows[i]).text()+"</div>";
     }
 
-    const match = label.innerText.match(/\((.*?)\)/);
+    $("#top10-list").html(html);
+});
 
-    if(match){
-        document.getElementById("excellent-rate").innerText="우수확률 : "+match[1];
-    }else{
-        document.getElementById("excellent-rate").innerText="계산 실패";
-    }
 
-},1200);
-```
-
+/* ===== 대기 유틸 ===== */
+function waitFor(cond,timeout){
+return new Promise((resolve,reject)=>{
+    const start=Date.now();
+    const timer=setInterval(()=>{
+        if(cond()){
+            clearInterval(timer);
+            resolve();
+        }
+        if(Date.now()-start>timeout){
+            clearInterval(timer);
+            reject();
+        }
+    },50);
+});
 }
