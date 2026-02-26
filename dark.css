@@ -1,171 +1,167 @@
-body{
-    margin:0;
-    font-family:'Noto Sans KR',sans-serif;
-    background: radial-gradient(circle at top,#0b1020,#05070f 70%);
-    color:#e5e7eb;
+let petData=[];
+
+fetch("pets.json")
+.then(r=>r.json())
+.then(data=>{
+    pet=JSON.parse(JSON.stringify(data));
+    petData=data;
+});
+
+const searchInput=document.getElementById("pet-search");
+const suggestionBox=document.getElementById("suggestions");
+const allList=document.getElementById("all-pet-list");
+const openBtn=document.getElementById("open-list");
+
+/* 자동완성 */
+searchInput.addEventListener("input",function(){
+
+    const value=this.value.trim();
+    suggestionBox.innerHTML="";
+    allList.style.display="none";
+
+    if(!value) return;
+
+    const filtered=petData
+        .filter(p=>p.name.includes(value))
+        .sort((a,b)=>a.name.localeCompare(b.name,'ko'))
+        .slice(0,15);
+
+    filtered.forEach(p=>{
+        const div=document.createElement("div");
+        div.className="suggest-item";
+        div.textContent=p.name;
+
+        div.onclick=()=>{
+            searchInput.value=p.name;
+            suggestionBox.innerHTML="";
+            startSearch(p.name);
+        };
+
+        suggestionBox.appendChild(div);
+    });
+});
+
+/* ▼ 전체 목록 */
+openBtn.onclick=()=>{
+    if(allList.style.display==="block"){
+        allList.style.display="none";
+        return;
+    }
+
+    suggestionBox.innerHTML="";
+    allList.innerHTML="";
+
+    const sorted=[...petData].sort((a,b)=>a.name.localeCompare(b.name,'ko'));
+
+    sorted.forEach(p=>{
+        const div=document.createElement("div");
+        div.className="pet-item";
+        div.textContent=p.name;
+
+        div.onclick=()=>{
+            searchInput.value=p.name;
+            allList.style.display="none";
+            startSearch(p.name);
+        };
+
+        allList.appendChild(div);
+    });
+
+    allList.style.display="block";
+};
+
+/* 검색 실행 */
+async function startSearch(name){
+
+    document.getElementById("name").value=name;
+    btnName="search";
+
+    $("#search").trigger("click");
+
+    await waitFor(()=>$("#myPet tbody tr").length>0,3000);
+
+    const td=$("#myPet tbody tr:first td");
+
+    $("#hp").val(parseFloat(td.eq(1).text()));
+    $("#atk").val(parseFloat(td.eq(2).text()));
+    $("#def").val(parseFloat(td.eq(3).text()));
+    $("#agi").val(parseFloat(td.eq(4).text()));
+
+    $("#s-init").text(
+        `S초기치 : ${td.eq(1).text()} / ${td.eq(2).text()} / ${td.eq(3).text()} / ${td.eq(4).text()}`
+    );
 }
 
-/* ===== 헤더 ===== */
-.top-header{
-    text-align:center;
-    padding:30px 10px 10px;
-}
+/* 계산 */
+document.getElementById("run-btn").addEventListener("click",async function(){
 
-.top-header h1{
-    margin:0;
-    font-size:34px;
-    color:#facc15;
-}
+    const name=searchInput.value.trim();
+    if(!name){alert("펫 이름 입력");return;}
 
-.subtitle{
-    color:#9ca3af;
-}
+    document.getElementById("name").value=name;
+    btnName="calculate";
 
-/* ===== 3패널 레이아웃 ===== */
-.layout{
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr;
-    gap:20px;
-    padding:20px;
-}
+    $("#calculate").trigger("click");
 
-.panel{
-    background:#111827;
-    border:1px solid #374151;
-    border-radius:14px;
-    padding:20px;
-    min-height:520px;
-    box-shadow:0 0 25px rgba(0,0,0,0.6);
-}
+    await waitFor(()=>$("#srank-label").text().length>0,6000);
 
-/* ===== 검색 영역 ===== */
-.autocomplete{
-    position:relative;   /* 🔴 드롭다운 기준점 */
-    margin-bottom:15px;
-}
+    const text=$("#srank-label").text();
+    const m=text.match(/\((.*?)\)/);
 
-.search-row{
-    display:flex;
-    gap:6px;
-}
+    if(m){
+        const rate=m[1].replace('%','').trim();
+        $("#excellent-rate").text(rate+"%");
+        $("#srank-label").text("");
+    }else{
+        $("#excellent-rate").text("계산 실패");
+    }
 
-#pet-search{
-    flex:1;
-    padding:8px;
-    background:#1f2937;
-    border:1px solid #374151;
-    color:white;
-    border-radius:6px;
-}
+    const grow=$("#myPet tbody tr").eq(1).find("td");
+    $("#s-grow").text(
+        `S성장률 : ${grow.eq(1).text()} / ${grow.eq(2).text()} / ${grow.eq(3).text()} / ${grow.eq(4).text()}`
+    );
 
-#open-list{
-    width:42px;
-    padding:0;
-    font-size:18px;
-    background:#374151;
-    border:none;
-    color:white;
-    border-radius:6px;
-    cursor:pointer;
-}
+    await waitFor(()=>$("#result tbody tr").length>0,6000);
 
-#open-list:hover{
-    background:#4b5563;
-}
+    const rows=$("#result tbody tr");
+    let html="";
 
-/* ===== 자동완성 + 전체목록 ===== */
-#suggestions,
-.petlist{
-    position:absolute;
-    background:#020617;
-    width:100%;
-    border:1px solid #374151;
-    max-height:260px;
-    overflow-y:auto;
-    z-index:20;
-}
+    rows.each(function(){
 
-#suggestions{
-    top:44px;
-}
+        const tds=$(this).find("td");
+        const rank=tds.eq(1).text().trim();
+        if(rank!=="8") return;
 
-.petlist{
-    top:44px;
-    display:none;
-}
+        let hp=tds.eq(2).text();
+        let atk=tds.eq(3).text();
+        let def=tds.eq(4).text();
+        let agi=tds.eq(5).text();
 
-.suggest-item,
-.pet-item{
-    padding:8px;
-    cursor:pointer;
-    border-bottom:1px solid #1f2937;
-}
+        hp=hp.replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
+        atk=atk.replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
+        def=def.replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
+        agi=agi.replace(/\[\d+\]/g,"").replace(/\(\d+\)/g,"");
 
-.suggest-item:hover,
-.pet-item:hover{
-    background:#374151;
-}
+        html+=`<div class="row">${hp} / ${atk} / ${def} / ${agi}</div>`;
+    });
 
-/* ===== 능력치 입력 ===== */
-.stat-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin:10px 0;
-}
+    if(html==="") html="<div class='row'>8등급 결과 없음</div>";
 
-.stat-row input{
-    width:120px;
-    padding:8px;
-    background:#1f2937;
-    border:1px solid #374151;
-    color:white;
-    border-radius:6px;
-}
+    $("#top10-list").html(html);
+});
 
-/* ===== 계산 버튼 ===== */
-button{
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    background:#facc15;
-    border:none;
-    border-radius:8px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-button:hover{
-    background:#fde047;
-}
-
-/* ===== 결과 박스 ===== */
-.excellent-box{
-    margin-top:20px;
-    padding:15px;
-    background:#0f172a;
-    border:1px solid #facc15;
-    border-radius:10px;
-    text-align:center;
-}
-
-.top10{
-    margin-top:20px;
-    max-height:240px;
-    overflow-y:auto;
-    background:#020617;
-    padding:10px;
-    border-radius:10px;
-}
-
-.row{
-    padding:6px;
-    border-bottom:1px solid #374151;
-    font-size:13px;
-}
-
-.coming{
-    margin-top:40px;
-    text-align:center;
-    color:#9ca3af;
+function waitFor(cond,timeout){
+return new Promise((resolve,reject)=>{
+    const start=Date.now();
+    const timer=setInterval(()=>{
+        if(cond()){
+            clearInterval(timer);
+            resolve();
+        }
+        if(Date.now()-start>timeout){
+            clearInterval(timer);
+            reject();
+        }
+    },50);
+});
 }
