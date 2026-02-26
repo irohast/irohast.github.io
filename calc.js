@@ -4,97 +4,109 @@ let petList = [];
 fetch("pets.json")
 .then(res => res.json())
 .then(data => {
-    petList = data.sort((a,b)=>a.name.localeCompare(b.name,'ko'));
-    initPetSelector();
+
+```
+/* ★★★★★ 핵심 : pet.js 엔진용 전역 데이터 주입 ★★★★★ */
+pet = JSON.parse(JSON.stringify(data));
+
+petList = data.sort((a,b)=>a.name.localeCompare(b.name,'ko'));
+initPetSelector();
+```
+
 });
 
-/* 드롭다운 생성 */
+/* 이름 선택 목록 생성 */
 function initPetSelector(){
-    const select = document.getElementById("pet-name");
-    select.innerHTML = '<option value="">페트 선택</option>';
+const select = document.getElementById("pet-name");
 
-    petList.forEach(p=>{
-        const option = document.createElement("option");
-        option.value = p.name;
-        option.textContent = p.name;
-        select.appendChild(option);
-    });
+```
+select.innerHTML = '<option value="">페트 선택</option>';
 
-    select.addEventListener("change", autoFillStat);
+petList.forEach(p=>{
+    const option = document.createElement("option");
+    option.value = p.name;
+    option.textContent = p.name;
+    select.appendChild(option);
+});
+
+select.addEventListener("change", autoFillStat);
+```
+
 }
 
-/* 펫 선택 → search 버튼 실제 클릭 */
+/* S초기치 자동입력 */
 function autoFillStat(){
 
-    const name = document.getElementById("pet-name").value;
-    if(!name) return;
+```
+const name = document.getElementById("pet-name").value;
+const found = pet.find(p=>p.name===name);
+if(!found) return;
 
-    // 엔진이 읽는 hidden 값 세팅
-    document.getElementById("name").value = name;
+/* pet.js가 실제로 쓰는 트리거 상태 */
+btnName = "search";
+document.getElementById("name").value = name;
 
-    // 🔥 실제 DOM 클릭 발생 (중요)
-    const searchBtn = document.getElementById("search");
-    if(searchBtn){
-        searchBtn.click();
+/* ★ 버튼 클릭을 강제로 발생시킴 (원본 동작 모방) */
+document.getElementById("search").click();
+
+/* 결과 읽어서 입력칸 채우기 */
+setTimeout(()=>{
+    const cells = $("#myPet tbody tr:first td");
+
+    if(cells.length >= 5){
+        document.getElementById("hp").value  = parseInt(cells.eq(1).text());
+        document.getElementById("atk").value = parseInt(cells.eq(2).text());
+        document.getElementById("def").value = parseInt(cells.eq(3).text());
+        document.getElementById("agi").value = parseInt(cells.eq(4).text());
     }
+},600);
+```
 
-    // S초기치 읽어서 입력창에 반영
-    setTimeout(()=>{
-        const cells = $("#myPet tbody tr:first td");
-
-        if(cells.length >= 5){
-            $("#hp").val(parseInt(cells.eq(1).text()) || 0);
-            $("#atk").val(parseInt(cells.eq(2).text()) || 0);
-            $("#def").val(parseInt(cells.eq(3).text()) || 0);
-            $("#agi").val(parseInt(cells.eq(4).text()) || 0);
-        }
-    }, 400);
 }
 
 /* + - 버튼 */
-function changeStat(stat, delta){
-    const el = document.getElementById(stat);
-    let v = parseInt(el.value) || 0;
-    v += delta;
-    if(v < 0) v = 0;
-    el.value = v;
+function changeStat(stat,delta){
+const el = document.getElementById(stat);
+let v = parseInt(el.value)||0;
+v += delta;
+if(v < 0) v = 0;
+el.value = v;
 }
 
-/* 계산하기 버튼 */
+/* 계산 버튼 */
 function runCalc(){
 
-    const name = document.getElementById("pet-name").value;
+```
+const name = document.getElementById("pet-name").value;
+if(!name){
+    alert("페트를 선택해주세요");
+    return;
+}
 
-    if(!name){
-        alert("페트를 선택해주세요");
+btnName = "calculate";
+document.getElementById("name").value = name;
+
+/* ★ 실제 계산 트리거 */
+document.getElementById("calculate").click();
+
+/* 결과 읽기 */
+setTimeout(()=>{
+    const label = document.getElementById("srank-label");
+
+    if(!label){
+        document.getElementById("excellent-rate").innerText="계산 실패";
         return;
     }
 
-    // 엔진 hidden name 세팅
-    document.getElementById("name").value = name;
+    const match = label.innerText.match(/\((.*?)\)/);
 
-    // 🔥 calculate 버튼 실제 클릭
-    const calcBtn = document.getElementById("calculate");
-    if(calcBtn){
-        calcBtn.click();
+    if(match){
+        document.getElementById("excellent-rate").innerText="우수확률 : "+match[1];
+    }else{
+        document.getElementById("excellent-rate").innerText="계산 실패";
     }
 
-    // 확률 읽기
-    setTimeout(()=>{
-        const label = document.getElementById("srank-label");
+},1200);
+```
 
-        if(!label || label.innerText.trim() === ""){
-            document.getElementById("excellent-rate").innerText = "계산 실패";
-            return;
-        }
-
-        const match = label.innerText.match(/\((.*?)\)/);
-
-        if(match){
-            document.getElementById("excellent-rate").innerText = "우수확률 : " + match[1];
-        }else{
-            document.getElementById("excellent-rate").innerText = "계산 실패";
-        }
-
-    }, 700);
 }
