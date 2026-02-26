@@ -91,15 +91,6 @@ function runCalc(){
         }
     },300);
 }
-.stat-row input{
-    width:110px;
-    height:40px;
-    font-size:16px;
-}
 
-.stat-row button{
-    width:42px;
-    height:40px;
-    font-size:18px;
-}
+
 
