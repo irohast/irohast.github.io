@@ -19,6 +19,9 @@
 
 <main class="layout">
 
+<!-- =========================
+좌측 패널 (기존 계산기)
+========================= -->
 <section class="panel" id="left-panel">
 
 <label>페트 이름</label>
@@ -52,12 +55,59 @@
 
 </section>
 
-<section class="panel"><div class="coming">준비중</div></section>
+
+<!-- =========================
+가운데 패널 (8등급 확률 계산기)
+========================= -->
+<section class="panel" id="prob-panel">
+
+<h3>8등급 확률 계산기</h3>
+
+<label>펫 선택</label>
+<select id="prob-pet"></select>
+
+<h4>1레벨 초기치</h4>
+
+<div class="stat-row"><span>내구력</span><input id="prob-init-hp"></div>
+<div class="stat-row"><span>공격력</span><input id="prob-init-atk"></div>
+<div class="stat-row"><span>방어력</span><input id="prob-init-def"></div>
+<div class="stat-row"><span>순발력</span><input id="prob-init-agi"></div>
+
+<h4>현재 레벨</h4>
+
+<div class="stat-row"><span>레벨</span><input id="prob-level"></div>
+
+<h4>현재 스탯</h4>
+
+<div class="stat-row"><span>내구력</span><input id="prob-cur-hp"></div>
+<div class="stat-row"><span>공격력</span><input id="prob-cur-atk"></div>
+<div class="stat-row"><span>방어력</span><input id="prob-cur-def"></div>
+<div class="stat-row"><span>순발력</span><input id="prob-cur-agi"></div>
+
+<button id="prob-run">확률 계산</button>
+
+<div class="excellent-box">
+<h3>8등급 확률</h3>
+<div id="rank8-rate">대기중</div>
+</div>
+
+<div class="top10">
+<h3>성장 분석</h3>
+<div id="growth-analysis"></div>
+</div>
+
+</section>
+
+
+<!-- =========================
+우측 패널 (미래 기능)
+========================= -->
 <section class="panel"><div class="coming">준비중</div></section>
 
 </main>
 
-<!-- ===== 엔진 영역 ===== -->
+
+<!-- ===== 기존 엔진 영역 ===== -->
 <div style="display:none">
 
 <input id="name">
@@ -78,14 +128,12 @@ var btnName="";
 var result=[];
 </script>
 
-<!-- 팝업 제거 -->
 <script>
 window.alert=function(){};
 </script>
 
 <script src="pet.js"></script>
 
-<!-- 원본 이벤트 이식 -->
 <script>
 $(document).ready(function(){
 
@@ -111,7 +159,9 @@ $("#search, #calculate").on("click", function(){
 </script>
 
 <script src="calc.js"></script>
+
+<!-- 새 확률 계산기 -->
+<script src="prob.js"></script>
+
 </body>
 </html>
-
-
