@@ -14,30 +14,47 @@
 <header class="top-header">
     <h1>🎲 별바 계산기 🎲</h1>
     <div class="subtitle">⭐ 라프땅의 놀이터 ⭐</div>
-        <div class="subtitle">⭐ 별과바다 부족 ⭐</div>
+    <div class="subtitle">⭐ 별과바다 부족 ⭐</div>
 </header>
 
 <main class="layout">
 
-<!-- =========================
-좌측 패널 (기존 계산기)
-========================= -->
+<!-- 좌측 계산기 -->
 <section class="panel" id="left-panel">
 
 <label>페트 이름</label>
+
 <div class="autocomplete">
 <div class="search-row">
+
 <input type="text" id="pet-search" placeholder="펫 이름 입력">
 <button id="open-list">▼</button>
+
 </div>
+
 <div id="suggestions"></div>
 <div id="all-pet-list" class="petlist"></div>
 </div>
 
-<div class="stat-row"><span>내구력</span><input type="number" id="hp"></div>
-<div class="stat-row"><span>공격력</span><input type="number" id="atk"></div>
-<div class="stat-row"><span>방어력</span><input type="number" id="def"></div>
-<div class="stat-row"><span>순발력</span><input type="number" id="agi"></div>
+<div class="stat-row">
+<span>내구력</span>
+<input type="number" id="hp">
+</div>
+
+<div class="stat-row">
+<span>공격력</span>
+<input type="number" id="atk">
+</div>
+
+<div class="stat-row">
+<span>방어력</span>
+<input type="number" id="def">
+</div>
+
+<div class="stat-row">
+<span>순발력</span>
+<input type="number" id="agi">
+</div>
 
 <button id="run-btn">계산하기</button>
 
@@ -56,33 +73,64 @@
 </section>
 
 
-<!-- =========================
-가운데 패널 (8등급 확률 계산기)
-========================= -->
+<!-- 가운데 계산기 -->
 <section class="panel" id="prob-panel">
 
 <h3>8등급 확률 계산기</h3>
 
 <label>펫 선택</label>
-<select id="prob-pet"></select>
+<select id="prob-pet" class="ui"></select>
 
 <h4>1레벨 초기치</h4>
 
-<div class="stat-row"><span>내구력</span><input id="prob-init-hp"></div>
-<div class="stat-row"><span>공격력</span><input id="prob-init-atk"></div>
-<div class="stat-row"><span>방어력</span><input id="prob-init-def"></div>
-<div class="stat-row"><span>순발력</span><input id="prob-init-agi"></div>
+<div class="stat-row">
+<span>내구력</span>
+<input id="prob-init-hp">
+</div>
+
+<div class="stat-row">
+<span>공격력</span>
+<input id="prob-init-atk">
+</div>
+
+<div class="stat-row">
+<span>방어력</span>
+<input id="prob-init-def">
+</div>
+
+<div class="stat-row">
+<span>순발력</span>
+<input id="prob-init-agi">
+</div>
 
 <h4>현재 레벨</h4>
 
-<div class="stat-row"><span>레벨</span><input id="prob-level"></div>
+<div class="stat-row">
+<span>레벨</span>
+<input id="prob-level">
+</div>
 
 <h4>현재 스탯</h4>
 
-<div class="stat-row"><span>내구력</span><input id="prob-cur-hp"></div>
-<div class="stat-row"><span>공격력</span><input id="prob-cur-atk"></div>
-<div class="stat-row"><span>방어력</span><input id="prob-cur-def"></div>
-<div class="stat-row"><span>순발력</span><input id="prob-cur-agi"></div>
+<div class="stat-row">
+<span>내구력</span>
+<input id="prob-cur-hp">
+</div>
+
+<div class="stat-row">
+<span>공격력</span>
+<input id="prob-cur-atk">
+</div>
+
+<div class="stat-row">
+<span>방어력</span>
+<input id="prob-cur-def">
+</div>
+
+<div class="stat-row">
+<span>순발력</span>
+<input id="prob-cur-agi">
+</div>
 
 <button id="prob-run">확률 계산</button>
 
@@ -99,25 +147,35 @@
 </section>
 
 
-<!-- =========================
-우측 패널 (미래 기능)
-========================= -->
-<section class="panel"><div class="coming">준비중</div></section>
+<!-- 우측 패널 -->
+<section class="panel">
+<div class="coming">준비중</div>
+</section>
 
 </main>
 
 
-<!-- ===== 기존 엔진 영역 ===== -->
 <div style="display:none">
 
 <input id="name">
 
-<div id="myPet"><table><tbody></tbody></table></div>
-<div id="result"><table><tbody></tbody></table></div>
+<div id="myPet">
+<table>
+<tbody></tbody>
+</table>
+</div>
+
+<div id="result">
+<table>
+<tbody></tbody>
+</table>
+</div>
+
 <div id="srank-label"></div>
 
 <button id="search"></button>
 <button id="calculate"></button>
+
 <div id="result-master-container"></div>
 
 </div>
@@ -154,13 +212,13 @@ $("#search, #calculate").on("click", function(){
 
     setSRank(copiedPet);
     setBase(foundPet);
+
 });
+
 });
 </script>
 
 <script src="calc.js"></script>
-
-<!-- 새 확률 계산기 -->
 <script src="prob.js"></script>
 
 </body>
