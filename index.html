@@ -12,14 +12,13 @@
 <body>
 
 <header class="top-header">
-    <h1>🎲 별바 계산기 🎲</h1>
-    <div class="subtitle">⭐ 라프땅의 놀이터 ⭐</div>
-    <div class="subtitle">⭐ 별과바다 부족 ⭐</div>
+<h1>🎲 별바 계산기 🎲</h1>
+<div class="subtitle">⭐ 라프땅의 놀이터 ⭐</div>
+<div class="subtitle">⭐ 별과바다 부족 ⭐</div>
 </header>
 
 <main class="layout">
 
-<!-- 좌측 계산기 -->
 <section class="panel" id="left-panel">
 
 <label>페트 이름</label>
@@ -73,13 +72,23 @@
 </section>
 
 
-<!-- 가운데 계산기 -->
 <section class="panel" id="prob-panel">
 
 <h3>8등급 확률 계산기</h3>
 
 <label>펫 선택</label>
-<select id="prob-pet" class="ui"></select>
+
+<div class="autocomplete">
+<div class="search-row">
+
+<input type="text" id="prob-search" placeholder="펫 이름 입력">
+<button id="prob-open-list">▼</button>
+
+</div>
+
+<div id="prob-suggestions"></div>
+<div id="prob-all-pet-list" class="petlist"></div>
+</div>
 
 <h4>1레벨 초기치</h4>
 
@@ -147,7 +156,6 @@
 </section>
 
 
-<!-- 우측 패널 -->
 <section class="panel">
 <div class="coming">준비중</div>
 </section>
@@ -181,41 +189,47 @@
 </div>
 
 <script>
+
 var pet=[];
 var btnName="";
 var result=[];
+
 </script>
 
 <script>
+
 window.alert=function(){};
+
 </script>
 
 <script src="pet.js"></script>
 
 <script>
+
 $(document).ready(function(){
 
 $("#search, #calculate").on("click", function(){
 
-    if(pet.length===0) return;
+if(pet.length===0) return;
 
-    const foundPet = pet.find(p => p.name === $("#name").val());
-    if(!foundPet) return;
+const foundPet = pet.find(p => p.name === $("#name").val());
+if(!foundPet) return;
 
-    btnName=this.id;
+btnName=this.id;
 
-    const copiedPet=JSON.parse(JSON.stringify(foundPet));
+const copiedPet=JSON.parse(JSON.stringify(foundPet));
 
-    $("#myPet tbody").empty();
-    $("#result tbody").empty();
-    result.length=0;
+$("#myPet tbody").empty();
+$("#result tbody").empty();
+result.length=0;
 
-    setSRank(copiedPet);
-    setBase(foundPet);
+setSRank(copiedPet);
+setBase(foundPet);
+
+});
 
 });
 
-});
 </script>
 
 <script src="calc.js"></script>
