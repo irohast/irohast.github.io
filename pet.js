@@ -59,30 +59,12 @@ function setSRank(copiedPet) {
         + '</tr>'
     );
 
-if (btnName == "search") {
-
-    const hpVal  = parseInt(resultHp, 10);
-    const atkVal = parseInt(resultAtk, 10);
-    const defVal = parseInt(resultDef, 10);
-    const agiVal = parseInt(resultAgi, 10);
-
-    $("#hp").val(hpVal);
-    $("#atk").val(atkVal);
-    $("#def").val(defVal);
-    $("#agi").val(agiVal);
-
-    // 기준값 저장
-    baseStats.hp  = hpVal;
-    baseStats.atk = atkVal;
-    baseStats.def = defVal;
-    baseStats.agi = agiVal;
-
-    // diff 초기화 (0으로 표시 안뜨게)
-    updateDiff('hp', hpVal);
-    updateDiff('atk', atkVal);
-    updateDiff('def', defVal);
-    updateDiff('agi', agiVal);
-}
+    if (btnName == "search") {
+        $("#hp").val(parseInt(resultHp, 10));
+        $("#atk").val(parseInt(resultAtk, 10));
+        $("#def").val(parseInt(resultDef, 10));
+        $("#agi").val(parseInt(resultAgi, 10));
+    }
 }
 
 function setBase(foundPet) {
@@ -242,8 +224,3 @@ function limitDecimalPlaces(number, places) {
 function preciseRound(num) {
     return Math.round(num * 1e12) / 1e12;
 }
-$("#hp, #atk, #def, #agi").on("input", function(){
-    const id = this.id;
-    const val = parseInt(this.value) || 0;
-    updateDiff(id, val);
-});
