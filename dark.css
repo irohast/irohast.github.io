@@ -178,58 +178,93 @@ color:#9ca3af;
 font-size:14px;
 }
 
-/* ===================== */
-/* 모바일 최적화 */
-/* ===================== */
+/* ===== 오른쪽 패널 숨김 ===== */
+.side-panel,
+.right-panel,
+.panel-right {
+  display: none !important;
+}
 
-@media (max-width: 768px) {
+/* ===== 레이아웃 1열로 변경 (핵심) ===== */
+.layout {
+  grid-template-columns: 1fr !important;
+  max-width: 480px;
+  margin: 0 auto;
+}
 
-  .layout{
-    display:flex;
-    flex-direction:column;
-    gap:14px;
-    padding:12px;
-  }
+/* ===== 패널 스타일 보강 ===== */
+.panel {
+  background: #0f172a !important;
+  border: 1px solid #1f2937 !important;
+  border-radius: 16px !important;
+  padding: 16px !important;
+}
 
-  .panel{
-    min-height:auto;
-    padding:16px;
-  }
+/* ===== 입력 간격 ===== */
+.input-group,
+.form-group,
+.field {
+  margin-bottom: 16px;
+}
 
-  .top-header{
-    padding:18px 10px 10px;
-  }
+/* ===== 입력 UI 개선 (범위 제한 중요) ===== */
+.panel input,
+.panel select {
+  height: 48px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid #2d3748;
+  background: #111827;
+  color: #e5e7eb;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
 
-  .top-header h1{
-    font-size:22px;
-  }
+/* 포커스 */
+.panel input:focus,
+.panel select:focus {
+  outline: none;
+  border-color: #facc15;
+  box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.2);
+}
 
-  .subtitle{
-    font-size:13px;
-  }
+/* placeholder */
+.panel input::placeholder {
+  color: #6b7280;
+}
 
-  .stat-row{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:6px;
-  }
+/* ===== 버튼 (검색 버튼 영향 안가게 범위 제한) ===== */
+.panel button,
+.panel .btn {
+  width: 100%;
+  height: 50px;
+  border-radius: 12px;
+  background: #facc15;
+  color: #111;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
 
-  .stat-row input{
-    width:100%;
-  }
+.panel button:hover,
+.panel .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(250, 204, 21, 0.3);
+}
 
-  input{
-    font-size:16px;
-  }
-
-  button{
-    font-size:16px;
-  }
-
-  /* 모바일에서 계산기만 표시 */
-  #prob-panel,
-  .panel:nth-child(3){
-    display:none;
-  }
-
+/* ===== 결과 영역 ===== */
+.result,
+.result-box,
+.excellent-box {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #020617;
+  border: 1px solid #1f2937;
+  text-align: center;
+  color: #facc15;
+  font-size: 16px;
 }
