@@ -36,23 +36,43 @@
 </div>
 
 <div class="stat-row">
-<span>내구력</span>
-<input type="number" id="hp">
+  <span>내구력</span>
+  <div class="stat-input">
+    <span id="hp-diff" class="diff"></span>
+    <button onclick="changeStat('hp', -1)">-</button>
+    <input type="text" id="hp">
+    <button onclick="changeStat('hp', 1)">+</button>
+  </div>
 </div>
 
 <div class="stat-row">
-<span>공격력</span>
-<input type="number" id="atk">
+  <span>공격력</span>
+  <div class="stat-input">
+    <span id="atk-diff" class="diff"></span>
+    <button onclick="changeStat('atk', -1)">-</button>
+    <input type="text" id="atk">
+    <button onclick="changeStat('atk', 1)">+</button>
+  </div>
 </div>
 
 <div class="stat-row">
-<span>방어력</span>
-<input type="number" id="def">
+  <span>방어력</span>
+  <div class="stat-input">
+    <span id="def-diff" class="diff"></span>
+    <button onclick="changeStat('def', -1)">-</button>
+    <input type="text" id="def">
+    <button onclick="changeStat('def', 1)">+</button>
+  </div>
 </div>
 
 <div class="stat-row">
-<span>순발력</span>
-<input type="number" id="agi">
+  <span>순발력</span>
+  <div class="stat-input">
+    <span id="agi-diff" class="diff"></span>
+    <button onclick="changeStat('agi', -1)">-</button>
+    <input type="text" id="agi">
+    <button onclick="changeStat('agi', 1)">+</button>
+  </div>
 </div>
 
 <button id="run-btn">계산하기</button>
