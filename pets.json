@@ -592,5 +592,6 @@
     {"name":"엘베어","initnum":22,"hp":32,"atk":41,"def":17,"agi":27},
     {"name":"굴가스","initnum":24,"hp":39,"atk":32,"def":38,"agi":7},
     {"name":"다이피노","initnum":23,"hp":28,"atk":41,"def":17,"agi":23},
-    {"name":"레피아","initnum":24,"hp":27,"atk":36,"def":12,"agi":33}
+    {"name":"레피아","initnum":24,"hp":27,"atk":36,"def":12,"agi":33},
+    {"name":"쿨코카스","initnum":20,"hp":45,"atk":32,"def":35,"agi":6}
 ]
